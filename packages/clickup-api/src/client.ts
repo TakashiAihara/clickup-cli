@@ -1,9 +1,41 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types.js';
+
+let globalAccessToken: string | undefined;
+
+export function setAccessToken(token: string): void {
+  globalAccessToken = token;
+}
+
+export function getAccessToken(): string | undefined {
+  return globalAccessToken;
+}
+
+export const customAxiosInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
+  const source = axios.CancelToken.source();
+  const token = getAccessToken();
+
+  const promise = axios({
+    ...config,
+    baseURL: config.baseURL || 'https://api.clickup.com/api',
+    headers: {
+      ...config.headers,
+      ...(token ? { 'Authorization': token } : {}),
+    },
+    cancelToken: source.token,
+  }).then(({ data }) => data);
+
+  // @ts-ignore
+  promise.cancel = () => {
+    source.cancel('Query was cancelled');
+  };
+
+  return promise;
+};
 
 export class ClickUpClient {
   private client: AxiosInstance;
-  
+
   constructor(config: ClickUpConfig) {
     this.client = axios.create({
       baseURL: config.baseUrl || 'https://api.clickup.com/api/v2',
