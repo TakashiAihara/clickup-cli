@@ -28,7 +28,7 @@ importers:
         version: link:../../packages/clickup-api
       '@clickup/cli-core':
         specifier: file:../../packages/clickup-cli-core
-        version: link:../../packages/clickup-cli-core
+        version: file:packages/clickup-cli-core
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
@@ -45,6 +45,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.10.0
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
@@ -107,6 +110,12 @@ packages:
 
   '@asyncapi/specs@6.10.0':
     resolution: {integrity: sha512-vB5oKLsdrLUORIZ5BXortZTlVyGWWMC1Nud/0LtgxQ3Yn2738HigAD6EVqScvpPsDUI/bcLVsYEXN4dtXQHVng==}
+
+  '@clickup/api@file:packages/clickup-api':
+    resolution: {directory: packages/clickup-api, type: directory}
+
+  '@clickup/cli-core@file:packages/clickup-cli-core':
+    resolution: {directory: packages/clickup-cli-core, type: directory}
 
   '@commander-js/extra-typings@14.0.0':
     resolution: {integrity: sha512-hIn0ncNaJRLkZrxBIp5AsW/eXEHNKYQBh0aPdoUqNgD+Io3NIykQqpKFyKcuasZhicGaEZJX/JBSIkZ4e5x8Dg==}
@@ -1146,6 +1155,10 @@ packages:
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -2394,6 +2407,21 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
 
+  '@clickup/api@file:packages/clickup-api':
+    dependencies:
+      axios: 1.10.0
+    transitivePeerDependencies:
+      - debug
+
+  '@clickup/cli-core@file:packages/clickup-cli-core':
+    dependencies:
+      '@clickup/api': file:packages/clickup-api
+      chalk: 5.6.2
+      commander: 11.1.0
+      inquirer: 9.3.7
+    transitivePeerDependencies:
+      - debug
+
   '@commander-js/extra-typings@14.0.0(commander@14.0.2)':
     dependencies:
       commander: 14.0.2
@@ -3358,6 +3386,8 @@ snapshots:
   dependency-graph@0.11.0: {}
 
   diff-sequences@29.6.3: {}
+
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
