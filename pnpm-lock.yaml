@@ -45,6 +45,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.10.0
+      commander:
+        specifier: ^11.1.0
+        version: 11.1.0
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -55,6 +58,9 @@ importers:
       orval:
         specifier: 8.0.0-rc.2
         version: 8.0.0-rc.2(openapi-types@12.1.3)(typescript@5.8.3)
+      tsx:
+        specifier: ^4.20.3
+        version: 4.20.3
       typescript:
         specifier: ^5.3.0
         version: 5.8.3
@@ -113,6 +119,7 @@ packages:
 
   '@clickup/api@file:packages/clickup-api':
     resolution: {directory: packages/clickup-api, type: directory}
+    hasBin: true
 
   '@clickup/cli-core@file:packages/clickup-cli-core':
     resolution: {directory: packages/clickup-cli-core, type: directory}
@@ -2410,6 +2417,8 @@ snapshots:
   '@clickup/api@file:packages/clickup-api':
     dependencies:
       axios: 1.10.0
+      commander: 11.1.0
+      dotenv: 17.2.3
     transitivePeerDependencies:
       - debug
 
