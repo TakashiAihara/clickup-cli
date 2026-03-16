@@ -1,4 +1,4 @@
-export { ConfigManager } from './config.js';
+export { loadConfig, saveConfig, updateConfig, getConfigValue, setConfigValue } from './config.js';
 export { createAuthCommand } from './commands/auth.js';
 export { createTasksCommand } from './commands/tasks.js';
 export { createSpacesCommand } from './commands/spaces.js';

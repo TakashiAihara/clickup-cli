@@ -8,57 +8,51 @@ export interface Config {
   defaultSpaceId?: string;
 }
 
-export class ConfigManager {
-  private configDir: string;
-  private configPath: string;
+const configDir = join(homedir(), '.clickup-cli');
+const configPath = join(configDir, 'config.json');
 
-  constructor() {
-    this.configDir = join(homedir(), '.clickup-cli');
-    this.configPath = join(this.configDir, 'config.json');
-    this.ensureConfigDir();
+function ensureConfigDir(): void {
+  if (!existsSync(configDir)) {
+    mkdirSync(configDir, { recursive: true });
+  }
+}
+
+export function loadConfig(): Config {
+  ensureConfigDir(); // Ensure directory exists before trying to read
+  if (!existsSync(configPath)) {
+    return {};
   }
 
-  private ensureConfigDir(): void {
-    if (!existsSync(this.configDir)) {
-      mkdirSync(this.configDir, { recursive: true });
-    }
+  try {
+    const content = readFileSync(configPath, 'utf-8');
+    return JSON.parse(content);
+  } catch (error) {
+    console.error('Failed to load config:', error);
+    return {};
   }
+}
 
-  load(): Config {
-    if (!existsSync(this.configPath)) {
-      return {};
-    }
-    
-    try {
-      const content = readFileSync(this.configPath, 'utf-8');
-      return JSON.parse(content);
-    } catch (error) {
-      console.error('Failed to load config:', error);
-      return {};
-    }
+export function saveConfig(config: Config): void {
+  ensureConfigDir(); // Ensure directory exists before trying to write
+  try {
+    writeFileSync(configPath, JSON.stringify(config, null, 2));
+  } catch (error) {
+    console.error('Failed to save config:', error);
+    throw error;
   }
+}
 
-  save(config: Config): void {
-    try {
-      writeFileSync(this.configPath, JSON.stringify(config, null, 2));
-    } catch (error) {
-      console.error('Failed to save config:', error);
-      throw error;
-    }
-  }
+export function updateConfig(updates: Partial<Config>): void {
+  const current = loadConfig();
+  const updated = { ...current, ...updates };
+  saveConfig(updated);
+}
 
-  update(updates: Partial<Config>): void {
-    const current = this.load();
-    const updated = { ...current, ...updates };
-    this.save(updated);
-  }
+export function getConfigValue(key: keyof Config): string | undefined {
+  const config = loadConfig();
+  return config[key];
+}
 
-  get(key: keyof Config): string | undefined {
-    const config = this.load();
-    return config[key];
-  }
-
-  set(key: keyof Config, value: string): void {
-    this.update({ [key]: value });
-  }
+export function setConfigValue(key: keyof Config, value: string): void {
+  updateConfig({ [key]: value });
 }
