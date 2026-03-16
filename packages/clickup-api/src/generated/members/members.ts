@@ -24,7 +24,7 @@ import { customAxiosInstance } from '../../client';
 
 
   /**
- * View the people who have access to a task. Responses do not include people with inherited Hierarchy permission to the task.
+ * Get Workspace members who have explicit access to a task. Responses do not include people with access through a Team, or people with access from the List, Folder, or Space where the task exists.
  * @summary Get Task Members
  */
 export const getTaskMembers = (
@@ -36,7 +36,7 @@ export const getTaskMembers = (
       );
     }
   /**
- * Get Workspace members who have access to a List.
+ * Get Workspace members who have explicit access to a List. Responses do not include people with access through a Team, or people with access from the Folder or Space where the List exists.
  * @summary Get List Members
  */
 export const getListMembers = (

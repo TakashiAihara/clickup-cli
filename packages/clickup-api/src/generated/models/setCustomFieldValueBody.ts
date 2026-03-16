@@ -25,9 +25,10 @@ import type { SetCustomFieldValueBodyAnyOfNine } from './setCustomFieldValueBody
 import type { SetCustomFieldValueBodyAnyOfOnezero } from './setCustomFieldValueBodyAnyOfOnezero';
 import type { SetCustomFieldValueBodyAnyOfOnetwo } from './setCustomFieldValueBodyAnyOfOnetwo';
 import type { SetCustomFieldValueBodyAnyOfOnefour } from './setCustomFieldValueBodyAnyOfOnefour';
-import type { SetCustomFieldValueBodyAnyOfOnefive } from './setCustomFieldValueBodyAnyOfOnefive';
+import type { SetCustomFieldValueBodyAnyOfOnesix } from './setCustomFieldValueBodyAnyOfOnesix';
 import type { SetCustomFieldValueBodyAnyOfOneseven } from './setCustomFieldValueBodyAnyOfOneseven';
-import type { SetCustomFieldValueBodyAnyOfOneeight } from './setCustomFieldValueBodyAnyOfOneeight';
-import type { SetCustomFieldValueBodyAnyOfTwoone } from './setCustomFieldValueBodyAnyOfTwoone';
+import type { SetCustomFieldValueBodyAnyOfOnenine } from './setCustomFieldValueBodyAnyOfOnenine';
+import type { SetCustomFieldValueBodyAnyOfTwozero } from './setCustomFieldValueBodyAnyOfTwozero';
+import type { SetCustomFieldValueBodyAnyOfTwothree } from './setCustomFieldValueBodyAnyOfTwothree';
 
-export type SetCustomFieldValueBody = SetCustomFieldValueBodyAnyOf | SetCustomFieldValueBodyAnyOfTwo | SetCustomFieldValueBodyAnyOfThree | SetCustomFieldValueBodyAnyOfFour | SetCustomFieldValueBodyAnyOfFive | SetCustomFieldValueBodyAnyOfSeven | SetCustomFieldValueBodyAnyOfEight | SetCustomFieldValueBodyAnyOfNine | SetCustomFieldValueBodyAnyOfOnezero | SetCustomFieldValueBodyAnyOfOnetwo | SetCustomFieldValueBodyAnyOfOnefour | SetCustomFieldValueBodyAnyOfOnefive | SetCustomFieldValueBodyAnyOfOneseven | SetCustomFieldValueBodyAnyOfOneeight | SetCustomFieldValueBodyAnyOfTwoone;
+export type SetCustomFieldValueBody = SetCustomFieldValueBodyAnyOf | SetCustomFieldValueBodyAnyOfTwo | SetCustomFieldValueBodyAnyOfThree | SetCustomFieldValueBodyAnyOfFour | SetCustomFieldValueBodyAnyOfFive | SetCustomFieldValueBodyAnyOfSeven | SetCustomFieldValueBodyAnyOfEight | SetCustomFieldValueBodyAnyOfNine | SetCustomFieldValueBodyAnyOfOnezero | SetCustomFieldValueBodyAnyOfOnetwo | SetCustomFieldValueBodyAnyOfOnefour | SetCustomFieldValueBodyAnyOfOnesix | SetCustomFieldValueBodyAnyOfOneseven | SetCustomFieldValueBodyAnyOfOnenine | SetCustomFieldValueBodyAnyOfTwozero | SetCustomFieldValueBodyAnyOfTwothree;

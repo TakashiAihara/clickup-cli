@@ -14,10 +14,11 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
+import type { SetCustomFieldValueBodyAnyOfOnefourValue } from './setCustomFieldValueBodyAnyOfOnefourValue';
 
 /**
- * Enter an integer that is greater than or equal to zero and where the `count` property is greater than or equal to the `value`. You can find the `count` property for each Emoji (Rating) Custom Field using [Get Accessible Custom Fields.](ref:getaccessiblecustomfields)
+ * Enter the ID of an attachment uploaded to a `custom_fields` entity using our [V3 Create Attachment](ref:postEntityAttachment) endpoint.
  */
 export type SetCustomFieldValueBodyAnyOfOnefour = {
-  value: number;
+  value: SetCustomFieldValueBodyAnyOfOnefourValue;
 };

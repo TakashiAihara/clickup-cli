@@ -17,11 +17,15 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
 export type GetTeams1Params = {
 /**
- * Workspace ID
+ * Workspace ID. **Note**: For this endpoint, `team_id`` is a required query parameter.
  */
 team_id: number;
 /**
- * Enter one or more User Group IDs to retrieve information about specific User Group.
+ * Enter one or more User Group IDs to retrieve information about specific User Group(s).\
+ \
+For example: \
+ \
+`?team_id=12456&group_ids=ABC12345&group_ids=DEF98765`
  */
-group_ids?: string;
+group_ids?: string[];
 };

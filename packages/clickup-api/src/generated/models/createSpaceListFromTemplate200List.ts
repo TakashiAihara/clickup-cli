@@ -44,12 +44,12 @@ export type CreateSpaceListFromTemplate200List = {
    * Default due date for tasks in the List
    * @nullable
    */
-  due_date?: string | null;
+  due_date?: Date | null;
   /**
    * Default start date for tasks in the List
    * @nullable
    */
-  start_date?: string | null;
+  start_date?: Date | null;
   /** Information about the parent Folder containing this List, if applicable */
   folder?: CreateSpaceListFromTemplate200ListFolder;
   /** Information about the Workspace Space containing this List */

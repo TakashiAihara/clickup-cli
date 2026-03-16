@@ -14,10 +14,11 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
+import type { SetCustomFieldValueBodyAnyOfOnesevenValue } from './setCustomFieldValueBodyAnyOfOnesevenValue';
 
 /**
- * Enter an array of the universal unique identifiers (UUIDs) of the labels you want to apply. You can find the UUIDs available for each Label Custom Field using [Get Accessible Custom Fields.](ref:getaccessiblecustomfields)
+ * Enter a number between the `start` and `end` values of each Manual Progress Custom Field. For example, for a field with `start: 10` and `end: 30`, sending `current: 20` will be displayed as 50% complete in ClickUp. You can find the `start` and `end` values for each Manual Progress Custom Field using [Get Accessible Custom Fields.](ref:getaccessiblecustomfields)
  */
 export type SetCustomFieldValueBodyAnyOfOneseven = {
-  value: string[];
+  value: SetCustomFieldValueBodyAnyOfOnesevenValue;
 };

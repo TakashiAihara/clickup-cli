@@ -14,7 +14,16 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
+import type { GetTasks200TasksItemCustomFieldsItemTypeConfig } from './getTasks200TasksItemCustomFieldsItemTypeConfig';
 
-export type SetCustomFieldValueBodyAnyOfOnefiveValue = {
-  current: number;
+export type GetTasks200TasksItemCustomFieldsItem = {
+  id?: string;
+  name?: string;
+  /** The Custom Field type. */
+  type?: string;
+  /** [Configuration options](doc:customfields#the-type_config-property) specific to each Custom Field based on the Custom Field type. */
+  type_config?: GetTasks200TasksItemCustomFieldsItemTypeConfig;
+  date_created?: string;
+  hide_from_guests?: boolean;
+  required?: boolean;
 };

@@ -27,11 +27,15 @@ For example: `custom_task_ids=true&team_id=123`.
  */
 team_id?: number;
 /**
- * Enter the `date` of a task comment using Unix time in milliseconds.
+ * The Unix timestamp (in milliseconds) of the reference comment. Required for pagination. Must be used in combination with `start_id`.
+\
+ Value should be the `date` of the last comment from the previous response.
  */
 start?: number;
 /**
- * Enter the Comment `id` of a task comment.
+ * The unique ID of the reference comment. Required for pagination. Must be used in combination with `start`. 
+\
+ Value should be the `id` of the last comment from the previous response.
  */
 start_id?: string;
 };

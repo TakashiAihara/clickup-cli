@@ -72,9 +72,9 @@ export type CreateFolderFromTemplateBodyOptions = {
   /** Import tasks subtasks and assignees combination */
   old_subtask_assignees?: boolean;
   /** Project start date for remapping dates */
-  start_date?: string;
+  start_date?: Date;
   /** Project due date for remapping dates */
-  due_date?: string;
+  due_date?: Date;
   /** Remap start dates */
   remap_start_date?: boolean;
   /** Skip weekends when remapping dates */

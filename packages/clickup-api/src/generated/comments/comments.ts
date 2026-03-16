@@ -42,9 +42,9 @@ import { customAxiosInstance } from '../../client';
   /**
  * View task comments. \
  \
-If you do not include the `start` and `start_id` parameters, this endpoint will return the most recent 25 comments.\
+Retrieve comments from a task. Results are returned in reverse chronological order (newest to oldest). By default, the request returns the 25 most recent comments.\
  \
-Use the `start` and `start id` parameters of the oldest comment to retrieve the next 25 comments.
+[Pagination](https://developer.clickup.com/docs/task-comments-pagination): To fetch the next page of history (older comments), you must use the `start` and `start_id` parameters together, using the data from the last comment of the current response.
  * @summary Get Task Comments
  */
 export const getTaskComments = (

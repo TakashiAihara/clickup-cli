@@ -14,11 +14,10 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
-import type { SetCustomFieldValueBodyAnyOfOneeightValue } from './setCustomFieldValueBodyAnyOfOneeightValue';
 
 /**
- * Include the latitude, longitude, and formatted address as defined in the [Google Maps Geocoding API.](https://developers.google.com/maps/documentation/geocoding/overview)
+ * Enter an integer that is greater than or equal to zero and where the `count` property is greater than or equal to the `value`. You can find the `count` property for each Emoji (Rating) Custom Field using [Get Accessible Custom Fields.](ref:getaccessiblecustomfields)
  */
-export type SetCustomFieldValueBodyAnyOfOneeight = {
-  value: SetCustomFieldValueBodyAnyOfOneeightValue;
+export type SetCustomFieldValueBodyAnyOfOnesix = {
+  value: number;
 };

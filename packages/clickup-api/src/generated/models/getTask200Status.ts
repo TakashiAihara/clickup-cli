@@ -16,8 +16,9 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
  */
 
 export type GetTask200Status = {
-  status: string;
-  color: string;
-  orderindex: number;
-  type: string;
+  id?: string;
+  status?: string;
+  color?: string;
+  orderindex?: number;
+  type?: string;
 };

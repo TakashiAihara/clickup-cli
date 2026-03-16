@@ -18,6 +18,6 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 /**
  * Set a button Custom Field to `true` to "click" it. This will trigger the button's action as if it was clicked in the UI.
  */
-export type SetCustomFieldValueBodyAnyOfTwoone = {
+export type SetCustomFieldValueBodyAnyOfTwothree = {
   value: boolean;
 };

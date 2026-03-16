@@ -14,9 +14,7 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
-import type { SetCustomFieldValueBodyAnyOfOneeightValueLocation } from './setCustomFieldValueBodyAnyOfOneeightValueLocation';
 
-export type SetCustomFieldValueBodyAnyOfOneeightValue = {
-  location?: SetCustomFieldValueBodyAnyOfOneeightValueLocation;
-  formatted_address?: string;
+export type SetCustomFieldValueBodyAnyOfOnesevenValue = {
+  current: number;
 };

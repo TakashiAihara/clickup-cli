@@ -14,8 +14,9 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
+import type { SetCustomFieldValueBodyAnyOfTwozeroValueLocation } from './setCustomFieldValueBodyAnyOfTwozeroValueLocation';
 
-export type AddDependencyBody = {
-  depends_on?: string;
-  dependency_of?: string;
+export type SetCustomFieldValueBodyAnyOfTwozeroValue = {
+  location?: SetCustomFieldValueBodyAnyOfTwozeroValueLocation;
+  formatted_address?: string;
 };

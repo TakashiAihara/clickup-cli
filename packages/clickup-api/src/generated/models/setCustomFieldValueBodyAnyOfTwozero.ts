@@ -14,8 +14,11 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
 
  * OpenAPI spec version: 2.0
  */
+import type { SetCustomFieldValueBodyAnyOfTwozeroValue } from './setCustomFieldValueBodyAnyOfTwozeroValue';
 
-export type SetCustomFieldValueBodyAnyOfOneeightValueLocation = {
-  lat?: number;
-  lng?: number;
+/**
+ * Include the latitude, longitude, and formatted address as defined in the [Google Maps Geocoding API.](https://developers.google.com/maps/documentation/geocoding/overview)
+ */
+export type SetCustomFieldValueBodyAnyOfTwozero = {
+  value: SetCustomFieldValueBodyAnyOfTwozeroValue;
 };

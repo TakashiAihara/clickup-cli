@@ -15,7 +15,7 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
  * OpenAPI spec version: 2.0
  */
 
-export type AddDependencyBody = {
-  depends_on?: string;
-  dependency_of?: string;
+export type SetCustomFieldValueBodyAnyOfTwozeroValueLocation = {
+  lat?: number;
+  lng?: number;
 };

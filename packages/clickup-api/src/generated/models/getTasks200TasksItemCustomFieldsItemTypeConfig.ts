@@ -15,7 +15,7 @@ Our [Getting Started Guide](https://developer.clickup.com/docs/index) provides a
  * OpenAPI spec version: 2.0
  */
 
-export type AddDependencyBody = {
-  depends_on?: string;
-  dependency_of?: string;
-};
+/**
+ * [Configuration options](doc:customfields#the-type_config-property) specific to each Custom Field based on the Custom Field type.
+ */
+export type GetTasks200TasksItemCustomFieldsItemTypeConfig = { [key: string]: unknown };

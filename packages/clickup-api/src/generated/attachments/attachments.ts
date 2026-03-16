@@ -28,6 +28,8 @@ import { customAxiosInstance } from '../../client';
  * Upload a file to a task as an attachment. Files stored in the cloud cannot be used in this API request.\
  \
 ***Note:** This request uses multipart/form-data as the content type.*
+ \
+ ***Tip:** Try our new [V3 Attachments API](ref:postentityattachment), which supports both tasks and File type Custom Fields!*
  * @summary Create Task Attachment
  */
 export const createTaskAttachment = (

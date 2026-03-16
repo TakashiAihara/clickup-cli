@@ -25,6 +25,7 @@ import type { Priority } from './priority';
 import type { GetTasks200TasksItemDueDate } from './getTasks200TasksItemDueDate';
 import type { GetTasks200TasksItemStartDate } from './getTasks200TasksItemStartDate';
 import type { GetTasks200TasksItemTimeEstimate } from './getTasks200TasksItemTimeEstimate';
+import type { GetTasks200TasksItemCustomFieldsItem } from './getTasks200TasksItemCustomFieldsItem';
 import type { Items } from './items';
 import type { List } from './list';
 import type { Folder } from './folder';
@@ -53,7 +54,7 @@ export type GetTasks200TasksItem = {
   points?: number;
   time_estimate?: GetTasks200TasksItemTimeEstimate;
   time_spent?: string;
-  custom_fields?: Items;
+  custom_fields?: GetTasks200TasksItemCustomFieldsItem[];
   /** Array of Lists where the task has been added. */
   locations?: Items[];
   list?: List;
