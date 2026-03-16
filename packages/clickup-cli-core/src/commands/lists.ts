@@ -1,52 +1,30 @@
 import { Command } from 'commander';
-import chalk from 'chalk';
 import { ClickUpClient } from '../../../clickup-api/dist/index.js';
-import { ConfigManager } from '../config.js';
+import { getConfigValue } from '../config.js';
 
-export function createListsCommand(): Command {
-  const lists = new Command('lists');
-  
-  lists
-    .description('Manage lists')
-    .addCommand(createListListsCommand());
+export function createListsCommand() {
+  const listsCommand = new Command('lists')
+    .description('Manage ClickUp lists');
 
-  return lists;
-}
-
-function createListListsCommand(): Command {
-  return new Command('list')
-    .description('List all lists in a space')
+  listsCommand
+    .command('get-all')
+    .description('Get all lists in a space')
     .requiredOption('-s, --space-id <spaceId>', 'Space ID')
     .action(async (options) => {
-      const client = await getAuthenticatedClient();
-      if (!client) return;
+      const accessToken = getConfigValue('accessToken');
+      if (!accessToken) {
+        console.error('Access token not found. Please login first.');
+        return;
+      }
 
+      const clickup = new ClickUpClient({ accessToken });
       try {
-        const lists = await client.getLists(options.spaceId);
-        
-        if (lists.length === 0) {
-          console.log(chalk.yellow('No lists found'));
-          return;
-        }
-
-        console.log(chalk.blue(`Found ${lists.length} lists:`));
-        lists.forEach(list => {
-          console.log(`${chalk.green(list.id)} - ${list.name} (${list.task_count || 0} tasks)`);
-        });
+        const lists = await clickup.getLists(options.spaceId);
+        console.log(JSON.stringify(lists, null, 2));
       } catch (error) {
-        console.error(chalk.red('Failed to fetch lists:', error));
+        console.error('Failed to get lists:', error);
       }
     });
-}
 
-async function getAuthenticatedClient(): Promise<ClickUpClient | null> {
-  const config = new ConfigManager();
-  const accessToken = config.get('accessToken');
-
-  if (!accessToken) {
-    console.error(chalk.red('Not authenticated. Run "clickup auth login" first.'));
-    return null;
-  }
-
-  return new ClickUpClient({ accessToken });
+  return listsCommand;
 }

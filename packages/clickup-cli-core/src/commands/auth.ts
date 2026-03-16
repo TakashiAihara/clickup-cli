@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { ClickUpClient } from '../../../clickup-api/dist/index.js';
-import { ConfigManager } from '../config.js';
+import { getConfigValue, setConfigValue, updateConfig } from '../config.js';
 
 export function createAuthCommand(): Command {
   const auth = new Command('auth');
@@ -20,8 +20,6 @@ function createLoginCommand(): Command {
   return new Command('login')
     .description('Login to ClickUp')
     .action(async () => {
-      const config = new ConfigManager();
-      
       const { accessToken } = await inquirer.prompt([
         {
           type: 'password',
@@ -35,7 +33,7 @@ function createLoginCommand(): Command {
         const client = new ClickUpClient({ accessToken });
         const user = await client.getUser();
         
-        config.set('accessToken', accessToken);
+        setConfigValue('accessToken', accessToken);
         
         console.log(chalk.green(`✓ Successfully logged in as ${user.username}`));
       } catch (error) {
@@ -49,8 +47,7 @@ function createLogoutCommand(): Command {
   return new Command('logout')
     .description('Logout from ClickUp')
     .action(() => {
-      const config = new ConfigManager();
-      config.update({ accessToken: undefined });
+      updateConfig({ accessToken: undefined });
       console.log(chalk.green('✓ Successfully logged out'));
     });
 }
@@ -59,8 +56,7 @@ function createStatusCommand(): Command {
   return new Command('status')
     .description('Show authentication status')
     .action(async () => {
-      const config = new ConfigManager();
-      const accessToken = config.get('accessToken');
+      const accessToken = getConfigValue('accessToken');
       
       if (!accessToken) {
         console.log(chalk.yellow('Not authenticated. Run "clickup auth login" to login.'));
