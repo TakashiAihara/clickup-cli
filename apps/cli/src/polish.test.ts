@@ -9,7 +9,7 @@ import {
   createTask,
   deleteTask,
 } from '@clickup/api';
-import { saveConfig, loadConfig, removeConfig, getToken, maskToken } from './config.js';
+import { saveToken, removeToken, removeConfig, getToken, maskToken, paths } from './config.js';
 
 const token = process.env.CLICKUP_API_TOKEN;
 const listId = process.env.TEST_LIST_ID;
@@ -122,28 +122,26 @@ describe('T061: Performance with task lists', () => {
 // T062: Security audit
 // ============================================================
 describe('T062: Security audit', () => {
-  const CONFIG_FILE = join(homedir(), '.clickup-cli', 'config.json');
-
-  it('should store config with 0600 permissions', () => {
-    // Save a test config
+  it('should store credentials with 0600 permissions', () => {
     let backup: string | null = null;
+    const credFile = paths.CREDENTIALS_FILE;
     try {
-      if (existsSync(CONFIG_FILE)) {
-        backup = require('node:fs').readFileSync(CONFIG_FILE, 'utf-8');
+      if (existsSync(credFile)) {
+        backup = require('node:fs').readFileSync(credFile, 'utf-8');
       }
 
-      saveConfig({ token: 'pk_test_security_audit' });
+      saveToken('pk_test_security_audit');
 
       if (process.platform !== 'win32') {
-        const stats = statSync(CONFIG_FILE);
+        const stats = statSync(credFile);
         const mode = (stats.mode & 0o777).toString(8);
         expect(mode).toBe('600');
       }
     } finally {
       if (backup) {
-        require('node:fs').writeFileSync(CONFIG_FILE, backup, { mode: 0o600 });
+        require('node:fs').writeFileSync(credFile, backup, { mode: 0o600 });
       } else {
-        removeConfig();
+        removeToken();
       }
     }
   });
