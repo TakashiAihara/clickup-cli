@@ -228,9 +228,9 @@
 - [x] T057 [P] Write unit tests to reach ≥80% coverage target (SC-006)
 - [x] T058 [P] Write end-to-end CLI tests covering all commands and error paths
 - [x] T059 [P] Update `quickstart.md` with actual examples from implemented commands
-- [ ] T060 [P] Verify JSON output is deterministic (run multiple times, compare hashes)
-- [ ] T061 [P] Test with large task lists (>100 items) for performance (per SC-001)
-- [ ] T062 [P] Security audit: ensure no token leaks in logs, config file perms 0600
+- [x] T060 [P] Verify JSON output is deterministic (run multiple times, compare hashes)
+- [x] T061 [P] Test with large task lists (>100 items) for performance (per SC-001)
+- [x] T062 [P] Security audit: ensure no token leaks in logs, config file perms 0600
 
 ---
 
