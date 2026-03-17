@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { input, password, confirm } from '@inquirer/prompts';
 import { setAccessToken, getAuthorizedUser } from '@clickup/api';
-import { saveConfig, loadConfig, removeConfig, getToken, maskToken } from '../config.js';
+import { saveToken, removeConfig, getToken, maskToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 export function createAuthCommand(): Command {
@@ -32,7 +32,7 @@ export function createAuthCommand(): Command {
         const result = await getAuthorizedUser();
         const user = (result as any).user;
 
-        saveConfig({ token });
+        saveToken(token);
 
         console.log(`Authenticated as ${user.username} (${user.email})`);
       } catch (error) {
