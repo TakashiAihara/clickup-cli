@@ -1,18 +1,14 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
-import { config as loadEnv } from 'dotenv';
 import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types.js';
 
-// Load environment variables from .env file
-loadEnv();
-
-let globalAccessToken: string | undefined = process.env.CLICKUP_API_TOKEN;
+let globalAccessToken: string | undefined;
 
 export function setAccessToken(token: string): void {
   globalAccessToken = token;
 }
 
 export function getAccessToken(): string | undefined {
-  return globalAccessToken || process.env.CLICKUP_API_TOKEN;
+  return globalAccessToken;
 }
 
 export const customAxiosInstance = <T>(config: AxiosRequestConfig): Promise<T> => {

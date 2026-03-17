@@ -2,13 +2,11 @@
   "name": "@clickup/api",
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": {
-    "clickup": "./cli.js"
-  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
+      "bun": "./src/index.ts",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -21,16 +19,14 @@
     "test": "vitest",
     "clean": "rm -rf dist",
     "update-openapi": "curl -o openapi/clickup-api-v2-reference.json https://developer.clickup.com/openapi/clickup-api-v2-reference.json",
-    "generate": "orval --config ./orval.config.ts",
+    "generate": "orval --config ./orval.config.ts && sed -i \"s/formData.append/\\/\\/ @ts-expect-error orval generates incorrect FormData.append call\\nformData.append/\" ./src/generated/api.ts",
     "generate:watch": "orval --config ./orval.config.ts --watch"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "commander": "^11.1.0",
-    "dotenv": "^17.2.3"
+    "axios": "^1.6.0"
   },
   "devDependencies": {
-    "orval": "8.0.0-rc.2",
+    "orval": "^8.5.3",
     "vitest": "^1.0.0"
   }
 }
