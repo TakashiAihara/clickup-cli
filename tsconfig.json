@@ -18,8 +18,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@clickup/api": ["./packages/clickup-api/src"],
-      "@clickup/cli-core": ["./packages/clickup-cli-core/src"]
+      "@clickup/api": ["./packages/clickup-api/src"]
     }
   },
   "include": ["packages/**/*", "apps/**/*"],

@@ -14,8 +14,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@clickup/api": "file:../../packages/clickup-api",
-    "@clickup/cli-core": "file:../../packages/clickup-cli-core"
+    "@clickup/api": "file:../../packages/clickup-api"
   },
   "devDependencies": {}
 }
