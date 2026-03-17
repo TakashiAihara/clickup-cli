@@ -6,9 +6,8 @@ export default defineConfig({
       target: './openapi/clickup-api-v2-reference.json',
     },
     output: {
-      mode: 'tags-split',
+      mode: 'single',
       target: './src/generated/api.ts',
-      schemas: './src/generated/models',
       client: 'axios-functions',
       clean: true,
       prettier: false,

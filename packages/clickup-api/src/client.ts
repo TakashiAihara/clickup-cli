@@ -1,6 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { config as loadEnv } from 'dotenv';
-import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types.js';
+import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types';
 
 // Load environment variables from .env file
 loadEnv();
@@ -15,28 +15,37 @@ export function getAccessToken(): string | undefined {
   return globalAccessToken || process.env.CLICKUP_API_TOKEN;
 }
 
-export const customAxiosInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
-  const source = axios.CancelToken.source();
+// Create a plain axios instance; token added via interceptor
+const instance = axios.create({
+  baseURL: 'https://api.clickup.com/api/v2',
+  timeout: 30000,
+});
+
+// Request interceptor to inject Authorization header
+instance.interceptors.request.use((config) => {
   const token = getAccessToken();
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = token;
+  }
+  return config;
+});
 
-  const promise = axios({
-    ...config,
-    baseURL: config.baseURL || 'https://api.clickup.com/api',
-    headers: {
-      ...config.headers,
-      ...(token ? { 'Authorization': token } : {}),
-    },
-    cancelToken: source.token,
-  }).then(({ data }) => data);
+/**
+ * Mutator function required by orval.
+ * Returns the configured axios instance (optionally merging request config).
+ * Generic type parameter is ignored; returned instance is typed as AxiosInstance.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function customAxiosInstance<T>(config?: AxiosRequestConfig): AxiosInstance {
+  // For now, return the global instance; config merging could be added if needed
+  return instance;
+}
 
-  // @ts-ignore
-  promise.cancel = () => {
-    source.cancel('Query was cancelled');
-  };
-
-  return promise;
-};
-
+/**
+ * Legacy ClickUpClient class (can be removed later).
+ * New code should use generated API functions.
+ */
 export class ClickUpClient {
   private client: AxiosInstance;
 
@@ -51,37 +60,37 @@ export class ClickUpClient {
   }
 
   async getUser(): Promise<User> {
-    const response: AxiosResponse<{ user: User }> = await this.client.get('/user');
+    const response = await this.client.get<{ user: User }>('/user');
     return response.data.user;
   }
 
   async getSpaces(teamId: string): Promise<Space[]> {
-    const response: AxiosResponse<{ spaces: Space[] }> = await this.client.get(`/team/${teamId}/space`);
+    const response = await this.client.get<{ spaces: Space[] }>(`/team/${teamId}/space`);
     return response.data.spaces;
   }
 
   async getLists(spaceId: string): Promise<List[]> {
-    const response: AxiosResponse<{ lists: List[] }> = await this.client.get(`/space/${spaceId}/list`);
+    const response = await this.client.get<{ lists: List[] }>(`/space/${spaceId}/list`);
     return response.data.lists;
   }
 
   async getTasks(listId: string): Promise<Task[]> {
-    const response: AxiosResponse<{ tasks: Task[] }> = await this.client.get(`/list/${listId}/task`);
+    const response = await this.client.get<{ tasks: Task[] }>(`/list/${listId}/task`);
     return response.data.tasks;
   }
 
   async getTask(taskId: string): Promise<Task> {
-    const response: AxiosResponse<Task> = await this.client.get(`/task/${taskId}`);
+    const response = await this.client.get<Task>(`/task/${taskId}`);
     return response.data;
   }
 
   async createTask(listId: string, task: CreateTaskPayload): Promise<Task> {
-    const response: AxiosResponse<Task> = await this.client.post(`/list/${listId}/task`, task);
+    const response = await this.client.post<Task>(`/list/${listId}/task`, task);
     return response.data;
   }
 
   async updateTask(taskId: string, updates: UpdateTaskPayload): Promise<Task> {
-    const response: AxiosResponse<Task> = await this.client.put(`/task/${taskId}`, updates);
+    const response = await this.client.put<Task>(`/task/${taskId}`, updates);
     return response.data;
   }
 
@@ -98,7 +107,7 @@ export class ClickUpClient {
   }): Promise<Task[]> {
     const params = new URLSearchParams();
     params.append('query', query);
-    
+
     if (options?.spaceIds) {
       options.spaceIds.forEach(id => params.append('space_ids[]', id));
     }
@@ -115,7 +124,7 @@ export class ClickUpClient {
       options.assignees.forEach(assignee => params.append('assignees[]', assignee.toString()));
     }
 
-    const response: AxiosResponse<{ tasks: Task[] }> = await this.client.get(`/search/tasks?${params.toString()}`);
+    const response = await this.client.get<{ tasks: Task[] }>(`/search/tasks?${params.toString()}`);
     return response.data.tasks;
   }
 }
