@@ -14,7 +14,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@clickup/api": "file:../../packages/clickup-api"
+    "@clickup/api": "workspace:*",
+    "commander": "^11.1.0"
   },
   "devDependencies": {}
 }
