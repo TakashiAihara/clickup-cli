@@ -1,33 +1,15 @@
 import { Command } from 'commander';
-import { setAccessToken, getAuthorizedUser, getAuthorizedTeams } from '@clickup/api';
+import { createAuthCommand } from './commands/auth.js';
+import { createTasksCommand } from './commands/tasks.js';
 
 const program = new Command();
 
 program
   .name('clickup')
-  .description('ClickUp CLI')
+  .description('ClickUp CLI - Manage tasks from the command line')
   .version('0.1.0');
 
-program
-  .command('whoami')
-  .description('Show current user')
-  .action(async () => {
-    const result = await getAuthorizedUser();
-    console.log(JSON.stringify(result, null, 2));
-  });
-
-program
-  .command('workspaces')
-  .description('List workspaces')
-  .action(async () => {
-    const result = await getAuthorizedTeams();
-    console.log(JSON.stringify(result, null, 2));
-  });
-
-// Set token from env before parsing
-const token = process.env.CLICKUP_API_TOKEN;
-if (token) {
-  setAccessToken(token);
-}
+program.addCommand(createAuthCommand());
+program.addCommand(createTasksCommand());
 
 program.parse();

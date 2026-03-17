@@ -11,11 +11,18 @@
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "@clickup/api": "workspace:*",
-    "commander": "^11.1.0"
+    "@inquirer/prompts": "^8.3.2",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.0",
+    "zod": "^4.3.6"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/inquirer": "^9.0.9"
+  }
 }

@@ -43,11 +43,11 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create feature branch and verify environment (Node.js 18+, Bun)
-- [ ] T002 Install dependencies (npm install) and verify build (npm run build)
-- [ ] T003 [P] Configure project structure: create directories in `packages/clickup-cli-core/src/`
+- [x] T001 Create feature branch and verify environment (Node.js 18+, Bun)
+- [x] T002 Install dependencies (npm install) and verify build (npm run build)
+- [x] T003 [P] Configure project structure: create directories in `packages/clickup-cli-core/src/`
   - `commands/`, `validation/`, `utils/`
-- [ ] T004 [P] Set up test configuration (vitest.config.ts extensions if needed)
+- [x] T004 [P] Set up test configuration (vitest.config.ts extensions if needed)
 
 ---
 
@@ -57,23 +57,23 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create configuration module (`packages/clickup-cli-core/src/config.ts`)
+- [x] T005 Create configuration module (`packages/clickup-cli-core/src/config.ts`)
   - Token storage in `~/.clickup-cll/config.json` with 0600
   - Load/save functions, environment override support
-- [ ] T006 [P] Define Zod schemas for configuration (config.schema.ts)
-- [ ] T007 [P] Implement error handling infrastructure
+- [x] T006 [P] Define Zod schemas for configuration (config.schema.ts)
+- [x] T007 [P] Implement error handling infrastructure
   - Define error types (AuthError, ValidationError, APIError, etc.)
   - Exit code mapping
-- [ ] T008 [P] Implement output formatting utilities
+- [x] T008 [P] Implement output formatting utilities
   - `formatOutput(data, format: 'table'|'json')`
   - Table rendering (chalk, borders) and JSON deterministic serialization
-- [ ] T009 Create base API client class (`packages/clickup-cli-core/src/api/client.ts`)
+- [x] T009 Create base API client class (`packages/clickup-cli-core/src/api/client.ts`)
   - Constructor accepts token
   - Axios instance with baseURL and Authorization header
   - Request/response interceptors for error handling
-- [ ] T010 [P] Create validation utility functions ( Zod integration )
+- [x] T010 [P] Create validation utility functions ( Zod integration )
   - `validate(schema, data)` wrapper with error formatting
-- [ ] T011 [US1] Implement `auth` command skeleton (commander structure)
+- [x] T011 [US1] Implement `auth` command skeleton (commander structure)
   - Subcommands: `login`, `status`, `logout`
   - Wire to placeholder handlers
 
@@ -91,19 +91,19 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T012 [P] [US1] Unit test: Config module (load/save/validate)
-- [ ] T013 [P] [US1] Integration test: Auth flow with mocked API (`/user` endpoint)
-- [ ] T014 [P] [US1] CLI test: `auth status` output parsing
+- [x] T012 [P] [US1] Unit test: Config module (load/save/validate)
+- [x] T013 [P] [US1] Integration test: Auth flow with mocked API (`/user` endpoint)
+- [x] T014 [P] [US1] CLI test: `auth status` output parsing
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement `auth login` interactive flow (inquirer hidden input)
+- [x] T015 [US1] Implement `auth login` interactive flow (inquirer hidden input)
   - Prompt for token, validate format (non-empty), save via config module
-- [ ] T016 [US1] Implement `auth status` - read token, call `/user` API, display team/email
-- [ ] T017 [US1] Implement `auth logout` - remove config file (with confirmation)
-- [ ] T018 [US1] Add token masking: never log raw token; mask in errors
-- [ ] T019 [US1] Wire `auth` command in `apps/cli/src/index.ts`
-- [ ] T020 [US1] Test end-to-end: login → status → logout flow
+- [x] T016 [US1] Implement `auth status` - read token, call `/user` API, display team/email
+- [x] T017 [US1] Implement `auth logout` - remove config file (with confirmation)
+- [x] T018 [US1] Add token masking: never log raw token; mask in errors
+- [x] T019 [US1] Wire `auth` command in `apps/cli/src/index.ts`
+- [x] T020 [US1] Test end-to-end: login → status → logout flow
 
 **Checkpoint**: At this point, authentication works independently. MVP foundation complete.
 
@@ -117,21 +117,21 @@
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T021 [P] [US2] Unit test: filter parsing and validation (Zod)
-- [ ] T022 [P] [US2] Integration test: `tasks list` with mocked API responses
-- [ ] T023 [P] [US2] CLI test: output format selection (table vs JSON)
+- [x] T021 [P] [US2] Unit test: filter parsing and validation (Zod)
+- [x] T022 [P] [US2] Integration test: `tasks list` with mocked API responses
+- [x] T023 [P] [US2] CLI test: output format selection (table vs JSON)
 
 ### Implementation for User Story 2
 
-- [ ] T024 [US2] Define Zod schema for list filters (listId required)
-- [ ] T025 [US2] Implement `tasks list` command
+- [x] T024 [US2] Define Zod schema for list filters (listId required)
+- [x] T025 [US2] Implement `tasks list` command
   - Parse options, validate via Zod
   - Call API client: `GET /list/{list_id}/task` with query params
   - Format output based on `--output` flag
-- [ ] T026 [US2] Add `--status`, `--assignee`, `--due-date` filter support
-- [ ] T027 [US2] Ensure JSON mode: No ANSI colors, deterministic key order
-- [ ] T028 [US2] Handle API errors (404 list, 429 rate limit) with proper exit codes
-- [ ] T029 [US2] Wire `tasks` command group in `apps/cli/src/index.ts`
+- [x] T026 [US2] Add `--status`, `--assignee`, `--due-date` filter support
+- [x] T027 [US2] Ensure JSON mode: No ANSI colors, deterministic key order
+- [x] T028 [US2] Handle API errors (404 list, 429 rate limit) with proper exit codes
+- [x] T029 [US2] Wire `tasks` command group in `apps/cli/src/index.ts`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Auth + List.
 
@@ -145,21 +145,21 @@
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T030 [P] [US3] Unit test: createTask input validation (Zod)
-- [ ] T031 [P] [US3] Integration test: create task with mocked API, verify payload
-- [ ] T032 [P] [US3] CLI test: interactive mode flow simulation
+- [x] T030 [P] [US3] Unit test: createTask input validation (Zod)
+- [x] T031 [P] [US3] Integration test: create task with mocked API, verify payload
+- [x] T032 [P] [US3] CLI test: interactive mode flow simulation
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Define Zod schema for `createTask` input (name required, others optional)
-- [ ] T034 [US3] Implement `tasks create` command (args mode)
+- [x] T033 [US3] Define Zod schema for `createTask` input (name required, others optional)
+- [x] T034 [US3] Implement `tasks create` command (args mode)
   - Validate inputs, call `POST /list/{list_id}/task`
   - Display created task (JSON or table)
-- [ ] T035 [US3] Add `--interactive` mode using inquirer
+- [x] T035 [US3] Add `--interactive` mode using inquirer
   - Prompt: list_id, name, description, status, assignee, due_date, tags, priority
   - Validate each step
-- [ ] T036 [US3] Handle validation errors (missing required, invalid enum) with clear messages
-- [ ] T037 [US3] Ensure created task output includes generated ID and timestamps
+- [x] T036 [US3] Handle validation errors (missing required, invalid enum) with clear messages
+- [x] T037 [US3] Ensure created task output includes generated ID and timestamps
 
 **Checkpoint**: All three stories (Auth, List, Create) independently functional.
 
@@ -173,18 +173,18 @@
 
 ### Tests for User Story 4 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T038 [P] [US4] Unit test: updateTask input validation (partial schema)
-- [ ] T039 [P] [US4] Integration test: update task fields, verify API payload
-- [ ] T040 [P] [US4] CLI test: multiple simultaneous flags
+- [x] T038 [P] [US4] Unit test: updateTask input validation (partial schema)
+- [x] T039 [P] [US4] Integration test: update task fields, verify API payload
+- [x] T040 [P] [US4] CLI test: multiple simultaneous flags
 
 ### Implementation for User Story 4
 
-- [ ] T041 [US4] Define Zod schema for `updateTask` input (partial, excludes id/list_id/readonly)
-- [ ] T042 [US4] Implement `tasks update <id>` command
+- [x] T041 [US4] Define Zod schema for `updateTask` input (partial, excludes id/list_id/readonly)
+- [x] T042 [US4] Implement `tasks update <id>` command
   - Parse options, validate, call `PUT /task/{task_id}`
   - Support clearing fields (e.g., `--due-date null`)
-- [ ] T043 [US4] Handle 404 (task not found), 422 (validation) with user-friendly messages
-- [ ] T044 [US4] Display updated task in selected output format
+- [x] T043 [US4] Handle 404 (task not found), 422 (validation) with user-friendly messages
+- [x] T044 [US4] Display updated task in selected output format
 
 **Checkpoint**: Stories 1-4 independently functional.
 
@@ -198,18 +198,18 @@
 
 ### Tests for User Story 5 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T045 [P] [US5] Unit test: delete confirmation logic
-- [ ] T046 [P] [US5] Integration test: delete task with mocked API, verify DELETE call
-- [ ] T047 [P] [US5] CLI test: cancellation flow
+- [x] T045 [P] [US5] Unit test: delete confirmation logic
+- [x] T046 [P] [US5] Integration test: delete task with mocked API, verify DELETE call
+- [x] T047 [P] [US5] CLI test: cancellation flow
 
 ### Implementation for User Story 5
 
-- [ ] T048 [US5] Implement `tasks delete <id>` command
+- [x] T048 [US5] Implement `tasks delete <id>` command
   - If `--confirm`: immediate DELETE call
   - Else: prompt "Delete task <id>? (y/N)"
   - On confirmation, call `DELETE /task/{task_id}`
-- [ ] T049 [US5] Handle 404 (already deleted), 403 (forbidden), network errors
-- [ ] T050 [US5] On success, print confirmation (JSON: `{deleted: true, id}`)
+- [x] T049 [US5] Handle 404 (already deleted), 403 (forbidden), network errors
+- [x] T050 [US5] On success, print confirmation (JSON: `{deleted: true, id}`)
 
 **Checkpoint**: All user stories (1-5) independently functional - MVP complete.
 
@@ -219,15 +219,15 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T051 [P] Add `--verbose` flag across all commands (debug logging to stderr)
-- [ ] T052 [P] Implement global error handler: catch unhandled rejections, print friendly message, exit 1
-- [ ] T053 [P] Add `--help` examples for each command (show common usage)
-- [ ] T054 [P] Ensure all error messages are user-friendly, include recovery suggestion
-- [ ] T055 [P] Add exit code documentation to README or `--help`
-- [ ] T056 [P] Run `npm run lint` and `npm run typecheck`; fix all warnings
-- [ ] T057 [P] Write unit tests to reach ≥80% coverage target (SC-006)
-- [ ] T058 [P] Write end-to-end CLI tests covering all commands and error paths
-- [ ] T059 [P] Update `quickstart.md` with actual examples from implemented commands
+- [x] T051 [P] Add `--verbose` flag across all commands (debug logging to stderr)
+- [x] T052 [P] Implement global error handler: catch unhandled rejections, print friendly message, exit 1
+- [x] T053 [P] Add `--help` examples for each command (show common usage)
+- [x] T054 [P] Ensure all error messages are user-friendly, include recovery suggestion
+- [x] T055 [P] Add exit code documentation to README or `--help`
+- [x] T056 [P] Run `npm run lint` and `npm run typecheck`; fix all warnings
+- [x] T057 [P] Write unit tests to reach ≥80% coverage target (SC-006)
+- [x] T058 [P] Write end-to-end CLI tests covering all commands and error paths
+- [x] T059 [P] Update `quickstart.md` with actual examples from implemented commands
 - [ ] T060 [P] Verify JSON output is deterministic (run multiple times, compare hashes)
 - [ ] T061 [P] Test with large task lists (>100 items) for performance (per SC-001)
 - [ ] T062 [P] Security audit: ensure no token leaks in logs, config file perms 0600
