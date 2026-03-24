@@ -16,6 +16,9 @@ jobs:
 
       - run: bun install
 
+      - name: Build packages
+        run: bun run --filter '@clickup/api' build
+
       - name: Typecheck
         run: bun run typecheck
 
