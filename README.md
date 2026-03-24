@@ -4,7 +4,7 @@ TypeScript + monorepo構成のClickUp CLIツールです。コマンドライン
 
 ## アーキテクチャ
 
-- **monorepo構成**: Turboを使った効率的なビルドとタスク管理
+- **monorepo構成**: Bunワークスペースによる効率的なビルドとタスク管理
 - **TypeScript**: 型安全な開発環境
 - **モジュラー設計**: パッケージごとに分離された機能
 
@@ -20,12 +20,30 @@ TypeScript + monorepo構成のClickUp CLIツールです。コマンドライン
 
 ## インストール
 
-```bash
-# 依存関係をインストール
-npm install
+### GitHub Releases からダウンロード（推奨）
 
-# すべてのパッケージをビルド
-npm run build
+```bash
+# Linux (x64)
+curl -L https://github.com/TakashiAihara/clickup-cli/releases/latest/download/clickup-linux-x64 -o clickup
+chmod +x clickup
+./clickup --help
+
+# macOS (Apple Silicon)
+curl -L https://github.com/TakashiAihara/clickup-cli/releases/latest/download/clickup-darwin-arm64 -o clickup
+chmod +x clickup
+./clickup --help
+
+# macOS (Intel)
+curl -L https://github.com/TakashiAihara/clickup-cli/releases/latest/download/clickup-darwin-x64 -o clickup
+chmod +x clickup
+./clickup --help
+```
+
+### ソースからビルド
+
+```bash
+bun install
+bun run build
 ```
 
 ## 使用方法
@@ -34,46 +52,46 @@ npm run build
 
 ```bash
 # ClickUpにログイン（アクセストークンが必要）
-node apps/cli/dist/index.js auth login
+clickup auth login
 
 # 認証状態を確認
-node apps/cli/dist/index.js auth status
+clickup auth status
 
 # ログアウト
-node apps/cli/dist/index.js auth logout
+clickup auth logout
 ```
 
 ### Spaces管理
 
 ```bash
 # チーム内のスペース一覧を表示
-node apps/cli/dist/index.js spaces list --team-id <TEAM_ID>
+clickup spaces list --team-id <TEAM_ID>
 ```
 
 ### Lists管理
 
 ```bash
 # スペース内のリスト一覧を表示
-node apps/cli/dist/index.js lists list --space-id <SPACE_ID>
+clickup lists list --space-id <SPACE_ID>
 ```
 
 ### Tasks管理
 
 ```bash
 # リスト内のタスク一覧を表示
-node apps/cli/dist/index.js tasks list --list-id <LIST_ID>
+clickup tasks list --list-id <LIST_ID>
 
 # 新しいタスクを作成
-node apps/cli/dist/index.js tasks create --list-id <LIST_ID> --name "タスク名"
+clickup tasks create --list-id <LIST_ID> --name "タスク名"
 
 # タスクの詳細を表示
-node apps/cli/dist/index.js tasks show <TASK_ID>
+clickup tasks show <TASK_ID>
 
 # タスクを更新
-node apps/cli/dist/index.js tasks update <TASK_ID> --name "新しい名前" --status "完了"
+clickup tasks update <TASK_ID> --name "新しい名前" --status "完了"
 
 # タスクを削除
-node apps/cli/dist/index.js tasks delete <TASK_ID>
+clickup tasks delete <TASK_ID>
 ```
 
 ## 設定
@@ -90,20 +108,30 @@ node apps/cli/dist/index.js tasks delete <TASK_ID>
 ## 開発
 
 ```bash
+# 依存関係をインストール
+bun install
+
 # 開発モードで実行
-npm run dev
+bun run dev
 
 # リント
-npm run lint
+bun run lint
 
 # 型チェック
-npm run typecheck
+bun run typecheck
 
 # テスト
-npm run test
+bun run test
 
-# クリーンビルド
-npm run clean && npm run build
+# シングルバイナリをビルド
+bun build apps/cli/src/index.ts --compile --outfile clickup
+```
+
+開発中は `bun run dev` で直接実行できます:
+
+```bash
+bun run dev -- auth login
+bun run dev -- tasks list --list-id <LIST_ID>
 ```
 
 ## 主な機能
