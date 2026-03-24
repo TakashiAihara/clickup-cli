@@ -1,8 +1,9 @@
 # ClickUp CLI Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-16
+Auto-generated from all feature plans. Last updated: 2026-03-24
 
 ## Active Technologies
+- TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun) (003-single-binary-release)
 
 - **Language**: TypeScript 5.3+ (strict mode)
 - **Runtime**: Bun (for building single binary)
@@ -71,13 +72,11 @@ Global options:
 - Test Discipline: Target ≥80% coverage
 
 ## Recent Changes
+- 003-single-binary-release: Added TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun)
 
 ### 001-basic-task-crud (2026-03-16)
 - Implemented core task CRUD operations
 - Added authentication command (secure token storage)
-- Dual output format (table/JSON for AI)
-- Zod validation for all inputs
-- Functions-first code architecture
 
 <!-- MANUAL ADDITIONS START -->
 <!-- Add project-specific notes here (they persist across updates) -->
