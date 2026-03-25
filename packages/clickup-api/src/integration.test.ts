@@ -16,6 +16,8 @@ describe('ClickUp API Integration Tests', () => {
     if (!token) {
       console.warn('⚠️  CLICKUP_API_TOKEN not found in environment variables');
       console.warn('⚠️  Set CLICKUP_API_TOKEN in .env file to run integration tests');
+    } else {
+      setAccessToken(token);
     }
   });
 

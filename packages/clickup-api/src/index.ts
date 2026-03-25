@@ -11,5 +11,8 @@ export type {
   UpdateTaskPayload
 } from './types.js';
 
-// Export all generated API functions and types
-export * from './generated/api.js';
+// Generated API functions (getAccessToken excluded to avoid collision with client.ts)
+export * from './generated/reexport.js';
+
+// OAuth endpoint available under explicit name
+export { getAccessToken as getOAuthToken } from './generated/api.js';
