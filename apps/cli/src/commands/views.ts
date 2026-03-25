@@ -13,6 +13,8 @@ import {
   updateView,
   deleteView,
   getViewTasks,
+  getChatViewComments,
+  createChatViewComment,
 } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
@@ -144,6 +146,44 @@ export function createViewsCommand(): Command {
           console.log(JSON.stringify({ deleted: true, id: viewId }));
         } else {
           console.log(`View ${viewId} deleted.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  cmd
+    .command('comments')
+    .description('List comments on a chat view')
+    .requiredOption('--view-id <id>', 'View ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await getChatViewComments(opts.viewId);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          const comments = (result as any).comments ?? [];
+          for (const c of comments) {
+            console.log(`${c.id}\t${c.user?.username ?? 'unknown'}\t${c.comment_text?.slice(0, 60) ?? ''}`);
+          }
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  cmd
+    .command('create-comment')
+    .description('Create a comment on a chat view')
+    .requiredOption('--view-id <id>', 'View ID')
+    .requiredOption('--body <text>', 'Comment text')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await createChatViewComment(opts.viewId, { comment_text: opts.body } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Comment created.`);
         }
       } catch (e) { handleError(e); }
     });
