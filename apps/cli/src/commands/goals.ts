@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getGoals, getGoal, createGoal, updateGoal, deleteGoal } from '@clickup/api';
+import type { GetGoals200, GetGoal200, CreateGoalBody, CreateGoal200, UpdateGoalBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createGoalsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const goals = (result as any).goals ?? [];
+          const goals = (result as GetGoals200).goals ?? [];
           for (const g of goals) {
             console.log(`${g.id}\t${g.name}`);
           }
@@ -43,7 +44,7 @@ export function createGoalsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const g = (result as any).goal ?? result;
+          const g = (result as GetGoal200).goal ?? result;
           console.log(`ID:   ${g.id}`);
           console.log(`Name: ${g.name}`);
         }
@@ -60,13 +61,13 @@ export function createGoalsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = { name: opts.name };
+        const body: Partial<CreateGoalBody> = { name: opts.name };
         if (opts.description) body.description = opts.description;
-        const result = await createGoal(Number(opts.teamId), body as any);
+        const result = await createGoal(Number(opts.teamId), body as CreateGoalBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`Goal created: ${(result as any).goal?.name ?? (result as any).id}`);
+          console.log(`Goal created: ${(result as CreateGoal200).goal?.name ?? (result as CreateGoal200).goal?.id}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -80,10 +81,10 @@ export function createGoalsCommand(): Command {
     .action(async (goalId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateGoalBody> = {};
         if (opts.name) body.name = opts.name;
         if (opts.description) body.description = opts.description;
-        const result = await updateGoal(goalId, body as any);
+        const result = await updateGoal(goalId, body as UpdateGoalBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

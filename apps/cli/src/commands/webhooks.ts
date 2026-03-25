@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getWebhooks, createWebhook, updateWebhook, deleteWebhook } from '@clickup/api';
+import type { GetWebhooks200, CreateWebhookBody, CreateWebhook200, UpdateWebhookBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createWebhooksCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const hooks = (result as any).webhooks ?? [];
+          const hooks = (result as GetWebhooks200).webhooks ?? [];
           for (const h of hooks) {
             console.log(`${h.id}\t${h.endpoint}\t${h.status ?? '-'}`);
           }
@@ -46,11 +47,11 @@ export function createWebhooksCommand(): Command {
           endpoint: opts.endpoint,
           events: opts.events.split(',').map((e: string) => e.trim()),
         };
-        const result = await createWebhook(Number(opts.teamId), body as any);
+        const result = await createWebhook(Number(opts.teamId), body as CreateWebhookBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`Webhook created: ${(result as any).id ?? 'ok'}`);
+          console.log(`Webhook created: ${(result as CreateWebhook200).id ?? 'ok'}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -65,11 +66,11 @@ export function createWebhooksCommand(): Command {
     .action(async (webhookId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateWebhookBody> = {};
         if (opts.endpoint) body.endpoint = opts.endpoint;
-        if (opts.events) body.events = opts.events.split(',').map((e: string) => e.trim());
+        if (opts.events) body.events = opts.events.split(',').map((e: string) => e.trim()).join(',');
         if (opts.status) body.status = opts.status;
-        const result = await updateWebhook(webhookId, body as any);
+        const result = await updateWebhook(webhookId, body as UpdateWebhookBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

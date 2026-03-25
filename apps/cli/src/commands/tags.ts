@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getSpaceTags, createSpaceTag, editSpaceTag, deleteSpaceTag, addTagToTask, removeTagFromTask } from '@clickup/api';
+import type { GetSpaceTags200, CreateSpaceTagBody, EditSpaceTagBody, DeleteSpaceTagBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createTagsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const tags = (result as any).tags ?? [];
+          const tags = (result as GetSpaceTags200).tags ?? [];
           for (const t of tags) {
             console.log(`${t.name}\t${t.tag_fg ?? '-'}\t${t.tag_bg ?? '-'}`);
           }
@@ -41,7 +42,7 @@ export function createTagsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createSpaceTag(Number(opts.spaceId), { tag: { name: opts.name } } as any);
+        const result = await createSpaceTag(Number(opts.spaceId), { tag: { name: opts.name } } as CreateSpaceTagBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -59,7 +60,7 @@ export function createTagsCommand(): Command {
     .action(async (tagName, opts) => {
       try {
         ensureAuth();
-        const result = await editSpaceTag(Number(opts.spaceId), tagName, { tag: { name: opts.newName } } as any);
+        const result = await editSpaceTag(Number(opts.spaceId), tagName, { tag: { name: opts.newName } } as EditSpaceTagBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -76,7 +77,7 @@ export function createTagsCommand(): Command {
     .action(async (tagName, opts) => {
       try {
         ensureAuth();
-        await deleteSpaceTag(Number(opts.spaceId), tagName, {} as any);
+        await deleteSpaceTag(Number(opts.spaceId), tagName, {} as DeleteSpaceTagBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify({ deleted: true, name: tagName }));
         } else {

@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getFolders, getFolder, createFolder, updateFolder, deleteFolder, getFolderAvailableFields, addGuestToFolder, removeGuestFromFolder, createFolderListFromTemplate } from '@clickup/api';
+import type { GetFolders200Folders, GetFolder200, CreateFolder200, UpdateFolderBody, GetFolderAvailableFields200, AddGuestToFolderBody, CreateFolderListFromTemplateBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createFoldersCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const folders = (result as any).folders ?? [];
+          const folders = (result as unknown as { folders: GetFolders200Folders[] }).folders ?? [];
           for (const f of folders) {
             console.log(`${f.id}\t${f.name}`);
           }
@@ -43,7 +44,7 @@ export function createFoldersCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const f = result as any;
+          const f = result as GetFolder200;
           console.log(`ID:   ${f.id}`);
           console.log(`Name: ${f.name}`);
         }
@@ -63,7 +64,8 @@ export function createFoldersCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`Folder created: ${(result as any).name ?? (result as any).id}`);
+          const created = result as CreateFolder200;
+          console.log(`Folder created: ${created.name ?? created.id}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -76,9 +78,9 @@ export function createFoldersCommand(): Command {
     .action(async (folderId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateFolderBody> = {};
         if (opts.name) body.name = opts.name;
-        const result = await updateFolder(Number(folderId), body as any);
+        const result = await updateFolder(Number(folderId), body as UpdateFolderBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -115,7 +117,7 @@ export function createFoldersCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const fields = (result as any).fields ?? [];
+          const fields = (result as GetFolderAvailableFields200).fields ?? [];
           for (const f of fields) {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
@@ -133,7 +135,7 @@ export function createFoldersCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToFolder(Number(opts.folderId), Number(opts.guestId), { permission_level: opts.permissionLevel } as any);
+        const result = await addGuestToFolder(Number(opts.folderId), Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToFolderBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -170,7 +172,7 @@ export function createFoldersCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createFolderListFromTemplate(opts.folderId, opts.templateId, { name: opts.name } as any);
+        const result = await createFolderListFromTemplate(opts.folderId, opts.templateId, { name: opts.name } as CreateFolderListFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

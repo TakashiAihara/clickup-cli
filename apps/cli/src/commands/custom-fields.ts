@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getAccessibleCustomFields, setCustomFieldValue, removeCustomFieldValue } from '@clickup/api';
+import type { GetAccessibleCustomFields200, SetCustomFieldValueBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createCustomFieldsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const fields = (result as any).fields ?? [];
+          const fields = (result as GetAccessibleCustomFields200).fields ?? [];
           for (const f of fields) {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
@@ -42,9 +43,9 @@ export function createCustomFieldsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        let value: any = opts.value;
+        let value: unknown = opts.value;
         try { value = JSON.parse(opts.value); } catch {}
-        const result = await setCustomFieldValue(opts.taskId, opts.fieldId, { value } as any);
+        const result = await setCustomFieldValue(opts.taskId, opts.fieldId, { value } as SetCustomFieldValueBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
