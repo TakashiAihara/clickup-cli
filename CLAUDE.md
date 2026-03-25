@@ -4,6 +4,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 
 ## Active Technologies
 - TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun) (003-single-binary-release)
+- TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント (004-hierarchy-commands)
 
 - **Language**: TypeScript 5.3+ (strict mode)
 - **Runtime**: Bun (for building single binary)
@@ -72,11 +73,11 @@ Global options:
 - Test Discipline: Target ≥80% coverage
 
 ## Recent Changes
+- 005-task-advanced: Added TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント
+- 004-hierarchy-commands: Added TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント
 - 003-single-binary-release: Added TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun)
 
 ### 001-basic-task-crud (2026-03-16)
-- Implemented core task CRUD operations
-- Added authentication command (secure token storage)
 
 <!-- MANUAL ADDITIONS START -->
 <!-- Add project-specific notes here (they persist across updates) -->
