@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { input, password, confirm } from '@inquirer/prompts';
-import { setAccessToken, getAuthorizedUser } from '@clickup/api';
+import { setAccessToken, getAuthorizedUser, type GetAuthorizedUser200 } from '@clickup/api';
 import { saveToken, removeConfig, getToken, maskToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -30,7 +30,7 @@ export function createAuthCommand(): Command {
 
         // Validate token by calling API
         const result = await getAuthorizedUser();
-        const user = (result as any).user;
+        const user = (result as GetAuthorizedUser200).user!;
 
         saveToken(token);
 
@@ -53,7 +53,7 @@ export function createAuthCommand(): Command {
 
         setAccessToken(token);
         const result = await getAuthorizedUser();
-        const user = (result as any).user;
+        const user = (result as GetAuthorizedUser200).user!;
 
         console.log(`User:  ${user.username}`);
         console.log(`Email: ${user.email}`);

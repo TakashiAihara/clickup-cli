@@ -26,6 +26,23 @@ import {
   getTaskSTimeinStatus,
   getBulkTasksTimeinStatus,
 } from '@clickup/api';
+import type {
+  GetTasksParams,
+  GetTasks200,
+  CreateTask200,
+  UpdateTaskBody,
+  AddDependencyBody,
+  DeleteDependencyParams,
+  Gettrackedtime200,
+  TracktimeBody,
+  EdittimetrackedBody,
+  GetTaskMembers200,
+  AddGuestToTaskBody,
+  CreateTaskAttachmentBody,
+  MergeTasksBody,
+  GetTaskSTimeinStatus200,
+  GetBulkTasksTimeinStatusParams,
+} from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 import { printTaskTable, printTaskDetail, type OutputFormat } from '../utils/format.js';
@@ -54,7 +71,7 @@ export function createTasksCommand(): Command {
       try {
         ensureAuth();
 
-        const params: Record<string, any> = {
+        const params: GetTasksParams = {
           page: parseInt(opts.page, 10),
         };
         if (opts.status) params.statuses = [opts.status];
@@ -66,7 +83,7 @@ export function createTasksCommand(): Command {
         if (format === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const taskList = (result as any).tasks ?? result;
+          const taskList = (result as GetTasks200).tasks ?? result;
           printTaskTable(Array.isArray(taskList) ? taskList : []);
         }
       } catch (error) {
@@ -109,7 +126,7 @@ export function createTasksCommand(): Command {
       try {
         ensureAuth();
 
-        const body: Record<string, any> = { name: opts.name };
+        const body: Record<string, unknown> = { name: opts.name };
         if (opts.description) body.description = opts.description;
         if (opts.status) body.status = opts.status;
         if (opts.priority) body.priority = parseInt(opts.priority, 10);
@@ -127,7 +144,7 @@ export function createTasksCommand(): Command {
         if (format === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`Task created: ${(result as any).name ?? (result as any).id}`);
+          console.log(`Task created: ${(result as CreateTask200).name ?? (result as CreateTask200).id}`);
           printTaskDetail(result);
         }
       } catch (error) {
@@ -148,7 +165,7 @@ export function createTasksCommand(): Command {
       try {
         ensureAuth();
 
-        const body: Record<string, any> = {};
+        const body: Record<string, unknown> = {};
         if (opts.name) body.name = opts.name;
         if (opts.description) body.description = opts.description;
         if (opts.status) body.status = opts.status;
@@ -167,7 +184,7 @@ export function createTasksCommand(): Command {
           throw new CliError(`Validation error: ${msg}`, 'VALIDATION_ERROR', ExitCodes.VALIDATION_ERROR);
         }
 
-        const result = await updateTask(taskId, parsed.data as any, {});
+        const result = await updateTask(taskId, parsed.data as UpdateTaskBody, {});
 
         const format = opts.output as OutputFormat;
         if (format === 'json') {
@@ -222,7 +239,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addDependency(opts.taskId, { depends_on: opts.dependsOn } as any);
+        const result = await addDependency(opts.taskId, { depends_on: opts.dependsOn } as AddDependencyBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -240,7 +257,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await deleteDependency(opts.taskId, { depends_on: opts.dependsOn } as any);
+        const result = await deleteDependency(opts.taskId, { depends_on: opts.dependsOn } as unknown as DeleteDependencyParams);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -299,11 +316,12 @@ export function createTasksCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const data = (result as any).data ?? result;
-          const entries = Array.isArray(data) ? data : [];
+          const data = (result as Gettrackedtime200).data ?? result;
+          const entries: Record<string, unknown>[] = Array.isArray(data) ? data : [];
           for (const e of entries) {
             const dur = e.duration ? `${Math.round(Number(e.duration) / 60000)}m` : '-';
-            console.log(`${e.id}\t${dur}\t${e.user?.username ?? '-'}`);
+            const user = e.user as Record<string, unknown> | undefined;
+            console.log(`${e.id}\t${dur}\t${user?.username ?? '-'}`);
           }
         }
       } catch (e) { handleError(e); }
@@ -318,7 +336,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await tracktime(opts.taskId, { duration: Number(opts.duration) } as any);
+        const result = await tracktime(opts.taskId, { duration: Number(opts.duration) } as unknown as TracktimeBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -337,7 +355,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await edittimetracked(opts.taskId, opts.intervalId, { duration: Number(opts.duration) } as any);
+        const result = await edittimetracked(opts.taskId, opts.intervalId, { duration: Number(opts.duration) } as unknown as EdittimetrackedBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -398,7 +416,7 @@ export function createTasksCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const members = (result as any).members ?? [];
+          const members = (result as GetTaskMembers200).members ?? [];
           for (const m of members) {
             console.log(`${m.id}\t${m.username ?? m.email ?? '-'}`);
           }
@@ -416,7 +434,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToTask(opts.taskId, Number(opts.guestId), { permission_level: opts.permissionLevel } as any);
+        const result = await addGuestToTask(opts.taskId, Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToTaskBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -498,7 +516,7 @@ export function createTasksCommand(): Command {
         }
         const fileData = fs.readFileSync(opts.file);
         const blob = new Blob([fileData]);
-        const result = await createTaskAttachment(opts.taskId, blob as any);
+        const result = await createTaskAttachment(opts.taskId, blob as unknown as CreateTaskAttachmentBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -516,7 +534,7 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await mergeTasks(opts.taskId, { task_ids: [opts.mergeWith] } as any);
+        const result = await mergeTasks(opts.taskId, { source_task_ids: [opts.mergeWith] } as MergeTasksBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result ?? { merged: true }, null, 2));
         } else {
@@ -537,7 +555,7 @@ export function createTasksCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const statuses = (result as any).current_status ? [result] : ((result as any).data ?? []);
+          const statuses = (result as GetTaskSTimeinStatus200).current_status ? [result] : ((result as Record<string, unknown>).data ?? []);
           for (const s of (Array.isArray(statuses) ? statuses : [])) {
             const total = s.total_time ? `${Math.round(Number(s.total_time.by_minute) / 60)}h` : '-';
             console.log(`${s.status ?? '-'}\t${total}`);
@@ -555,7 +573,7 @@ export function createTasksCommand(): Command {
       try {
         ensureAuth();
         const taskIds = opts.taskIds.split(',').map((id: string) => id.trim());
-        const result = await getBulkTasksTimeinStatus({ task_ids: taskIds } as any);
+        const result = await getBulkTasksTimeinStatus({ task_ids: taskIds } as unknown as GetBulkTasksTimeinStatusParams);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

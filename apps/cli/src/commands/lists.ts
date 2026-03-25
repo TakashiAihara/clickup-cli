@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { setAccessToken, getLists, getFolderlessLists, createList, createFolderlessList, updateList, deleteList, getAccessibleCustomFields, getListMembers, addGuestToList, removeGuestFromList, addTaskToList, removeTaskFromList, createTaskFromTemplate } from '@clickup/api';
+import type { GetLists200, GetFolderlessLists200, CreateList200, CreateFolderlessList200, UpdateListBody, GetAccessibleCustomFields200, GetListMembers200, AddGuestToListBody, CreateTaskFromTemplateBody } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -24,7 +25,7 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const lists = (result as any).lists ?? [];
+          const lists = (result as GetLists200).lists ?? [];
           for (const l of lists) {
             console.log(`${l.id}\t${l.name}`);
           }
@@ -44,7 +45,7 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const lists = (result as any).lists ?? [];
+          const lists = (result as GetFolderlessLists200).lists ?? [];
           for (const l of lists) {
             console.log(`${l.id}\t${l.name}`);
           }
@@ -65,7 +66,8 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`List created: ${(result as any).name ?? (result as any).id}`);
+          const created = result as CreateList200;
+          console.log(`List created: ${created.name ?? created.id}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -83,7 +85,8 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`List created: ${(result as any).name ?? (result as any).id}`);
+          const created = result as CreateFolderlessList200;
+          console.log(`List created: ${created.name ?? created.id}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -96,9 +99,9 @@ export function createListsCommand(): Command {
     .action(async (listId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateListBody> = {};
         if (opts.name) body.name = opts.name;
-        const result = await updateList(listId, body as any);
+        const result = await updateList(listId, body as UpdateListBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -135,7 +138,7 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const fields = (result as any).fields ?? [];
+          const fields = (result as GetAccessibleCustomFields200).fields ?? [];
           for (const f of fields) {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
@@ -155,7 +158,7 @@ export function createListsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const members = (result as any).members ?? [];
+          const members = (result as GetListMembers200).members ?? [];
           for (const m of members) {
             console.log(`${m.id}\t${m.username ?? m.email ?? '-'}`);
           }
@@ -173,7 +176,7 @@ export function createListsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToList(Number(opts.listId), Number(opts.guestId), { permission_level: opts.permissionLevel } as any);
+        const result = await addGuestToList(Number(opts.listId), Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToListBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -246,7 +249,7 @@ export function createListsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createTaskFromTemplate(Number(opts.listId), opts.templateId, { name: opts.name } as any);
+        const result = await createTaskFromTemplate(Number(opts.listId), opts.templateId, { name: opts.name } as CreateTaskFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

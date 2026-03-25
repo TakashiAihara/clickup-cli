@@ -16,6 +16,24 @@ import {
   getChatViewComments,
   createChatViewComment,
 } from '@clickup/api';
+import type {
+  GetSpaceViews200,
+  GetFolderViews200,
+  GetListViews200,
+  GetTeamViews200,
+  GetView200,
+  CreateSpaceViewBody,
+  CreateFolderViewBody,
+  CreateListViewBody,
+  CreateTeamViewBody,
+  CreateSpaceView200,
+  CreateFolderView200,
+  CreateListView200,
+  CreateTeamView200,
+  UpdateViewBody,
+  GetChatViewComments200,
+  CreateChatViewCommentBody,
+} from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -25,8 +43,8 @@ function ensureAuth(): void {
   setAccessToken(token);
 }
 
-function printViews(result: any): void {
-  const views = (result as any).views ?? [];
+function printViews(result: GetSpaceViews200 | GetFolderViews200 | GetListViews200 | GetTeamViews200): void {
+  const views = result.views ?? [];
   for (const v of views) {
     console.log(`${v.id}\t${v.name}\t${v.type ?? '-'}`);
   }
@@ -46,7 +64,7 @@ export function createViewsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        let result: any;
+        let result: GetSpaceViews200 | GetFolderViews200 | GetListViews200 | GetTeamViews200;
         if (opts.spaceId) result = await getSpaceViews(Number(opts.spaceId));
         else if (opts.folderId) result = await getFolderViews(Number(opts.folderId));
         else if (opts.listId) result = await getListViews(Number(opts.listId));
@@ -99,8 +117,8 @@ export function createViewsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const body = { name: opts.name, type: opts.type } as any;
-        let result: any;
+        const body = { name: opts.name, type: opts.type } as CreateSpaceViewBody;
+        let result: CreateSpaceView200 | CreateFolderView200 | CreateListView200 | CreateTeamView200;
         if (opts.spaceId) result = await createSpaceView(Number(opts.spaceId), body);
         else if (opts.folderId) result = await createFolderView(Number(opts.folderId), body);
         else if (opts.listId) result = await createListView(Number(opts.listId), body);
@@ -110,7 +128,7 @@ export function createViewsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          console.log(`View created: ${(result as any).view?.name ?? (result as any).id}`);
+          console.log(`View created: ${result.view?.name ?? result.view?.id}`);
         }
       } catch (e) { handleError(e); }
     });
@@ -123,9 +141,9 @@ export function createViewsCommand(): Command {
     .action(async (viewId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateViewBody> = {};
         if (opts.name) body.name = opts.name;
-        const result = await updateView(viewId, body as any);
+        const result = await updateView(viewId, body as UpdateViewBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -162,7 +180,7 @@ export function createViewsCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const comments = (result as any).comments ?? [];
+          const comments = (result as GetChatViewComments200).comments ?? [];
           for (const c of comments) {
             console.log(`${c.id}\t${c.user?.username ?? 'unknown'}\t${c.comment_text?.slice(0, 60) ?? ''}`);
           }
@@ -179,7 +197,7 @@ export function createViewsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createChatViewComment(opts.viewId, { comment_text: opts.body } as any);
+        const result = await createChatViewComment(opts.viewId, { comment_text: opts.body } as CreateChatViewCommentBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {

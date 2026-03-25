@@ -10,6 +10,13 @@ import {
   stopatimeEntry,
   getrunningtimeentry,
 } from '@clickup/api';
+import type {
+  Gettimeentrieswithinadaterange200,
+  GettimeentrieswithinadaterangeParams,
+  CreateatimeentryBody,
+  UpdateatimeEntryBody,
+  StartatimeEntryBody,
+} from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -32,14 +39,14 @@ export function createTimeTrackingCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const params: Record<string, any> = {};
-        if (opts.start) params.start_date = opts.start;
-        if (opts.end) params.end_date = opts.end;
+        const params: GettimeentrieswithinadaterangeParams = {};
+        if (opts.start) params.start_date = Number(opts.start);
+        if (opts.end) params.end_date = Number(opts.end);
         const result = await gettimeentrieswithinadaterange(Number(opts.teamId), params);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const entries = (result as any).data ?? [];
+          const entries = (result as Gettimeentrieswithinadaterange200).data ?? [];
           for (const e of entries) {
             const dur = e.duration ? `${Math.round(Number(e.duration) / 60000)}m` : '-';
             console.log(`${e.id}\t${dur}\t${e.task?.name ?? '-'}`);
@@ -72,12 +79,12 @@ export function createTimeTrackingCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {
+        const body: Partial<CreateatimeentryBody> = {
           tid: opts.taskId,
           duration: Number(opts.duration),
         };
         if (opts.description) body.description = opts.description;
-        const result = await createatimeentry(Number(opts.teamId), body as any);
+        const result = await createatimeentry(Number(opts.teamId), body as CreateatimeentryBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -96,10 +103,10 @@ export function createTimeTrackingCommand(): Command {
     .action(async (timerId, opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = {};
+        const body: Partial<UpdateatimeEntryBody> = {};
         if (opts.duration) body.duration = Number(opts.duration);
         if (opts.description) body.description = opts.description;
-        const result = await updateatimeEntry(Number(opts.teamId), Number(timerId), body as any);
+        const result = await updateatimeEntry(Number(opts.teamId), Number(timerId), body as UpdateatimeEntryBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -135,9 +142,9 @@ export function createTimeTrackingCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const body: Record<string, any> = { tid: opts.taskId };
+        const body: Partial<StartatimeEntryBody> = { tid: opts.taskId };
         if (opts.description) body.description = opts.description;
-        const result = await startatimeEntry(Number(opts.teamId), body as any);
+        const result = await startatimeEntry(Number(opts.teamId), body as StartatimeEntryBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
