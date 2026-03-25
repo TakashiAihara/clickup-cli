@@ -1,4 +1,3 @@
-import { Command } from 'commander';
 import {
   setAccessToken,
   gettimeentrieswithinadaterange,
@@ -17,12 +16,15 @@ import type {
   UpdateatimeEntryBody,
   StartatimeEntryBody,
 } from '@clickup/api';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -52,7 +54,9 @@ export function createTimeTrackingCommand(): Command {
             console.log(`${e.id}\t${dur}\t${e.task?.name ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -65,7 +69,9 @@ export function createTimeTrackingCommand(): Command {
         ensureAuth();
         const result = await getsingulartimeentry(Number(opts.teamId), timerId);
         console.log(JSON.stringify(result, null, 2));
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -90,7 +96,9 @@ export function createTimeTrackingCommand(): Command {
         } else {
           console.log('Time entry created.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -112,7 +120,9 @@ export function createTimeTrackingCommand(): Command {
         } else {
           console.log('Time entry updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -129,7 +139,9 @@ export function createTimeTrackingCommand(): Command {
         } else {
           console.log(`Time entry ${timerId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -150,7 +162,9 @@ export function createTimeTrackingCommand(): Command {
         } else {
           console.log('Timer started.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -167,7 +181,9 @@ export function createTimeTrackingCommand(): Command {
         } else {
           console.log('Timer stopped.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -180,7 +196,9 @@ export function createTimeTrackingCommand(): Command {
         ensureAuth();
         const result = await getrunningtimeentry(Number(opts.teamId));
         console.log(JSON.stringify(result, null, 2));
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

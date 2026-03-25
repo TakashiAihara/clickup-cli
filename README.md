@@ -139,7 +139,7 @@ bun run dev -- tasks list --list-id <LIST_ID>
 - **認証管理**: ClickUp APIトークンによる認証
 - **Space管理**: チーム内のスペース一覧表示
 - **List管理**: スペース内のリスト表示
-- **Task管理**: 
+- **Task管理**:
   - タスクの一覧表示、作成、更新、削除
   - ステータス、担当者、期限の管理
   - インタラクティブなタスク作成
@@ -148,6 +148,7 @@ bun run dev -- tasks list --list-id <LIST_ID>
 ## API対応状況
 
 ClickUp APIの主要エンドポイントに対応:
+
 - `/user` - ユーザー情報取得
 - `/team/{team_id}/space` - スペース一覧
 - `/space/{space_id}/list` - リスト一覧

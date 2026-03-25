@@ -1,10 +1,10 @@
 {
   "name": "clickup-cli",
   "version": "0.1.0",
-  "type": "module",
   "bin": {
     "clickup": "./dist/index.js"
   },
+  "type": "module",
   "scripts": {
     "build": "bun build src/index.ts --compile --outfile dist/clickup",
     "dev": "bun run src/index.ts",

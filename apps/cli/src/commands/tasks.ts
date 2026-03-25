@@ -1,5 +1,3 @@
-import { Command } from 'commander';
-import { confirm } from '@inquirer/prompts';
 import {
   setAccessToken,
   getTasks,
@@ -43,6 +41,9 @@ import type {
   GetTaskSTimeinStatus200,
   GetBulkTasksTimeinStatusParams,
 } from '@clickup/api';
+import { confirm } from '@inquirer/prompts';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 import { printTaskTable, printTaskDetail, type OutputFormat } from '../utils/format.js';
@@ -175,7 +176,11 @@ export function createTasksCommand(): Command {
         if (opts.tags) body.tags = opts.tags.split(',').map((t: string) => t.trim());
 
         if (Object.keys(body).length === 0) {
-          throw new CliError('No fields to update. Use --name, --status, etc.', 'VALIDATION_ERROR', ExitCodes.VALIDATION_ERROR);
+          throw new CliError(
+            'No fields to update. Use --name, --status, etc.',
+            'VALIDATION_ERROR',
+            ExitCodes.VALIDATION_ERROR,
+          );
         }
 
         const parsed = updateTaskSchema.safeParse(body);
@@ -239,13 +244,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addDependency(opts.taskId, { depends_on: opts.dependsOn } as AddDependencyBody);
+        const result = await addDependency(opts.taskId, {
+          depends_on: opts.dependsOn,
+        } as AddDependencyBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Dependency added: ${opts.taskId} depends on ${opts.dependsOn}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -257,13 +266,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await deleteDependency(opts.taskId, { depends_on: opts.dependsOn } as unknown as DeleteDependencyParams);
+        const result = await deleteDependency(opts.taskId, {
+          depends_on: opts.dependsOn,
+        } as unknown as DeleteDependencyParams);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Dependency removed.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -281,7 +294,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Task linked: ${opts.taskId} ↔ ${opts.linksTo}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -299,7 +314,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Link removed.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   // --- US2: Time tracking per task ---
@@ -324,7 +341,9 @@ export function createTasksCommand(): Command {
             console.log(`${e.id}\t${dur}\t${user?.username ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -336,13 +355,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await tracktime(opts.taskId, { duration: Number(opts.duration) } as unknown as TracktimeBody);
+        const result = await tracktime(opts.taskId, {
+          duration: Number(opts.duration),
+        } as unknown as TracktimeBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Time tracked: ${Math.round(Number(opts.duration) / 60000)} minutes`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -355,13 +378,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await edittimetracked(opts.taskId, opts.intervalId, { duration: Number(opts.duration) } as unknown as EdittimetrackedBody);
+        const result = await edittimetracked(opts.taskId, opts.intervalId, {
+          duration: Number(opts.duration),
+        } as unknown as EdittimetrackedBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Time entry updated.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -379,7 +406,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Time entry deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   // --- US3: Checklist ---
@@ -399,7 +428,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Checklist "${opts.name}" created.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   // --- US5: Members & Guests ---
@@ -421,7 +452,9 @@ export function createTasksCommand(): Command {
             console.log(`${m.id}\t${m.username ?? m.email ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -434,13 +467,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToTask(opts.taskId, Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToTaskBody);
+        const result = await addGuestToTask(opts.taskId, Number(opts.guestId), {
+          permission_level: opts.permissionLevel,
+        } as AddGuestToTaskBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Guest ${opts.guestId} added to task.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -458,7 +495,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Guest ${opts.guestId} removed from task.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   // --- US6: Tags ---
@@ -478,7 +517,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Tag "${opts.tagName}" added to task.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -496,7 +537,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`Tag "${opts.tagName}" removed from task.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   // --- US7: Attach, Merge, Time in Status ---
@@ -522,7 +565,9 @@ export function createTasksCommand(): Command {
         } else {
           console.log(`File attached to task.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -534,13 +579,17 @@ export function createTasksCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await mergeTasks(opts.taskId, { source_task_ids: [opts.mergeWith] } as MergeTasksBody);
+        const result = await mergeTasks(opts.taskId, {
+          source_task_ids: [opts.mergeWith],
+        } as MergeTasksBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result ?? { merged: true }, null, 2));
         } else {
           console.log(`Task ${opts.mergeWith} merged into ${opts.taskId}.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -555,13 +604,17 @@ export function createTasksCommand(): Command {
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          const statuses = (result as GetTaskSTimeinStatus200).current_status ? [result] : ((result as Record<string, unknown>).data ?? []);
-          for (const s of (Array.isArray(statuses) ? statuses : [])) {
+          const statuses = (result as GetTaskSTimeinStatus200).current_status
+            ? [result]
+            : ((result as Record<string, unknown>).data ?? []);
+          for (const s of Array.isArray(statuses) ? statuses : []) {
             const total = s.total_time ? `${Math.round(Number(s.total_time.by_minute) / 60)}h` : '-';
             console.log(`${s.status ?? '-'}\t${total}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   tasks
@@ -573,13 +626,17 @@ export function createTasksCommand(): Command {
       try {
         ensureAuth();
         const taskIds = opts.taskIds.split(',').map((id: string) => id.trim());
-        const result = await getBulkTasksTimeinStatus({ task_ids: taskIds } as unknown as GetBulkTasksTimeinStatusParams);
+        const result = await getBulkTasksTimeinStatus({
+          task_ids: taskIds,
+        } as unknown as GetBulkTasksTimeinStatusParams);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(JSON.stringify(result, null, 2));
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return tasks;

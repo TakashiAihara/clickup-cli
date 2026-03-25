@@ -1,11 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
 import { config as loadEnv } from 'dotenv';
-import {
-  setAccessToken,
-  getAccessToken,
-  getAuthorizedUser,
-  getAuthorizedTeams,
-} from './index.js';
+import { describe, it, expect, beforeAll } from 'vitest';
+
+import { setAccessToken, getAccessToken, getAuthorizedUser, getAuthorizedTeams } from './index.js';
 
 // Load environment variables
 loadEnv();

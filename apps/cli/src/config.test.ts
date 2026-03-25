@@ -1,7 +1,9 @@
-import { describe, it, expect, afterEach } from 'vitest';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, unlinkSync, rmSync, statSync } from 'node:fs';
-import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { join } from 'node:path';
+
+import { describe, it, expect, afterEach } from 'vitest';
+
 import {
   saveToken,
   loadToken,
@@ -88,10 +90,18 @@ describe('Config module (encrypted)', () => {
 
     afterEach(() => {
       // Clean up legacy and new files
-      try { unlinkSync(legacyFile); } catch {}
-      try { rmSync(legacyDir, { recursive: true }); } catch {}
-      try { unlinkSync(paths.CREDENTIALS_FILE); } catch {}
-      try { unlinkSync(paths.CONFIG_FILE); } catch {}
+      try {
+        unlinkSync(legacyFile);
+      } catch {}
+      try {
+        rmSync(legacyDir, { recursive: true });
+      } catch {}
+      try {
+        unlinkSync(paths.CREDENTIALS_FILE);
+      } catch {}
+      try {
+        unlinkSync(paths.CONFIG_FILE);
+      } catch {}
     });
 
     it('should migrate token from legacy config', () => {
@@ -117,7 +127,9 @@ describe('Config module (encrypted)', () => {
 
   describe('AppConfig (non-sensitive)', () => {
     afterEach(() => {
-      try { unlinkSync(paths.CONFIG_FILE); } catch {}
+      try {
+        unlinkSync(paths.CONFIG_FILE);
+      } catch {}
     });
 
     it('should save and load non-sensitive config', () => {

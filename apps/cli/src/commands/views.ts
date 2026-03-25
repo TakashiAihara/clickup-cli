@@ -1,4 +1,3 @@
-import { Command } from 'commander';
 import {
   setAccessToken,
   getSpaceViews,
@@ -34,12 +33,15 @@ import type {
   GetChatViewComments200,
   CreateChatViewCommentBody,
 } from '@clickup/api';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -69,14 +71,21 @@ export function createViewsCommand(): Command {
         else if (opts.folderId) result = await getFolderViews(Number(opts.folderId));
         else if (opts.listId) result = await getListViews(Number(opts.listId));
         else if (opts.teamId) result = await getTeamViews(Number(opts.teamId));
-        else throw new CliError('Specify --space-id, --folder-id, --list-id, or --team-id', 'VALIDATION_ERROR', ExitCodes.VALIDATION_ERROR);
+        else
+          throw new CliError(
+            'Specify --space-id, --folder-id, --list-id, or --team-id',
+            'VALIDATION_ERROR',
+            ExitCodes.VALIDATION_ERROR,
+          );
 
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           printViews(result);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -88,7 +97,9 @@ export function createViewsCommand(): Command {
         ensureAuth();
         const result = await getView(viewId);
         console.log(JSON.stringify(result, null, 2));
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -101,7 +112,9 @@ export function createViewsCommand(): Command {
         ensureAuth();
         const result = await getViewTasks(viewId, { page: Number(opts.page) });
         console.log(JSON.stringify(result, null, 2));
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -123,14 +136,21 @@ export function createViewsCommand(): Command {
         else if (opts.folderId) result = await createFolderView(Number(opts.folderId), body);
         else if (opts.listId) result = await createListView(Number(opts.listId), body);
         else if (opts.teamId) result = await createTeamView(Number(opts.teamId), body);
-        else throw new CliError('Specify --space-id, --folder-id, --list-id, or --team-id', 'VALIDATION_ERROR', ExitCodes.VALIDATION_ERROR);
+        else
+          throw new CliError(
+            'Specify --space-id, --folder-id, --list-id, or --team-id',
+            'VALIDATION_ERROR',
+            ExitCodes.VALIDATION_ERROR,
+          );
 
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`View created: ${result.view?.name ?? result.view?.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -149,7 +169,9 @@ export function createViewsCommand(): Command {
         } else {
           console.log('View updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -165,7 +187,9 @@ export function createViewsCommand(): Command {
         } else {
           console.log(`View ${viewId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -185,7 +209,9 @@ export function createViewsCommand(): Command {
             console.log(`${c.id}\t${c.user?.username ?? 'unknown'}\t${c.comment_text?.slice(0, 60) ?? ''}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -197,13 +223,17 @@ export function createViewsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createChatViewComment(opts.viewId, { comment_text: opts.body } as CreateChatViewCommentBody);
+        const result = await createChatViewComment(opts.viewId, {
+          comment_text: opts.body,
+        } as CreateChatViewCommentBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Comment created.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

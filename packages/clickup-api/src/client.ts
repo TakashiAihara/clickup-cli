@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosResponse, type AxiosRequestConfig } from 'axios';
+
 import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types.js';
 
 let globalAccessToken: string | undefined;
@@ -20,7 +21,7 @@ export const customAxiosInstance = <T>(config: AxiosRequestConfig): Promise<T> =
     baseURL: config.baseURL || 'https://api.clickup.com/api',
     headers: {
       ...config.headers,
-      ...(token ? { 'Authorization': token } : {}),
+      ...(token ? { Authorization: token } : {}),
     },
     cancelToken: source.token,
   }).then(({ data }) => data);
@@ -40,7 +41,7 @@ export class ClickUpClient {
     this.client = axios.create({
       baseURL: config.baseUrl || 'https://api.clickup.com/api/v2',
       headers: {
-        'Authorization': config.accessToken,
+        Authorization: config.accessToken,
         'Content-Type': 'application/json',
       },
     });
@@ -85,30 +86,33 @@ export class ClickUpClient {
     await this.client.delete(`/task/${taskId}`);
   }
 
-  async searchTasks(query: string, options?: {
-    spaceIds?: string[];
-    projectIds?: string[];
-    listIds?: string[];
-    statuses?: string[];
-    assignees?: number[];
-  }): Promise<Task[]> {
+  async searchTasks(
+    query: string,
+    options?: {
+      spaceIds?: string[];
+      projectIds?: string[];
+      listIds?: string[];
+      statuses?: string[];
+      assignees?: number[];
+    },
+  ): Promise<Task[]> {
     const params = new URLSearchParams();
     params.append('query', query);
-    
+
     if (options?.spaceIds) {
-      options.spaceIds.forEach(id => params.append('space_ids[]', id));
+      options.spaceIds.forEach((id) => params.append('space_ids[]', id));
     }
     if (options?.projectIds) {
-      options.projectIds.forEach(id => params.append('project_ids[]', id));
+      options.projectIds.forEach((id) => params.append('project_ids[]', id));
     }
     if (options?.listIds) {
-      options.listIds.forEach(id => params.append('list_ids[]', id));
+      options.listIds.forEach((id) => params.append('list_ids[]', id));
     }
     if (options?.statuses) {
-      options.statuses.forEach(status => params.append('statuses[]', status));
+      options.statuses.forEach((status) => params.append('statuses[]', status));
     }
     if (options?.assignees) {
-      options.assignees.forEach(assignee => params.append('assignees[]', assignee.toString()));
+      options.assignees.forEach((assignee) => params.append('assignees[]', assignee.toString()));
     }
 
     const response: AxiosResponse<{ tasks: Task[] }> = await this.client.get(`/search/tasks?${params.toString()}`);

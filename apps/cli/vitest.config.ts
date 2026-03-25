@@ -1,6 +1,7 @@
-import { defineConfig } from 'vitest/config';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+
+import { defineConfig } from 'vitest/config';
 
 // Load .env from repo root
 function loadDotEnv(): Record<string, string> {
