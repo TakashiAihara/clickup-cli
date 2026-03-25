@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosResponse, type AxiosRequestConfig } from 'axios';
 import type { ClickUpConfig, Task, Space, List, CreateTaskPayload, UpdateTaskPayload, User } from './types.js';
 
 let globalAccessToken: string | undefined;
