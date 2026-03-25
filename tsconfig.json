@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    "target": "ESNext",
+    "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "allowJs": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
     "noEmit": true,
     "moduleDetection": "force",
@@ -16,7 +14,7 @@
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist",
-    "baseUrl": "."
+    "types": ["bun"]
   },
   "include": ["packages/**/*", "apps/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
