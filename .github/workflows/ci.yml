@@ -22,8 +22,14 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Test
+      - name: Unit tests
         run: bunx vitest run --passWithNoTests --exclude='**/integration.test.ts'
+
+      - name: Integration tests
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+        run: bunx vitest run --passWithNoTests 'packages/**/*.integration.test.ts' '**/integration.test.ts'
 
       - name: Build (compile check)
         run: bun build apps/cli/src/index.ts --compile --outfile clickup
