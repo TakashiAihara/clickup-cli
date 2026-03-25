@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { setAccessToken, getTaskComments, createTaskComment, getListComments, createListComment, updateComment, deleteComment } from '@clickup/api';
+import { setAccessToken, getTaskComments, createTaskComment, getListComments, createListComment, updateComment, deleteComment, getThreadedComments, createThreadedComment } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
@@ -117,6 +117,44 @@ export function createCommentsCommand(): Command {
           console.log(JSON.stringify({ deleted: true, id: commentId }));
         } else {
           console.log(`Comment ${commentId} deleted.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  cmd
+    .command('replies')
+    .description('List threaded replies on a comment')
+    .requiredOption('--comment-id <id>', 'Comment ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await getThreadedComments(Number(opts.commentId));
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          const replies = (result as any).comments ?? (result as any).replies ?? [];
+          for (const r of replies) {
+            console.log(`${r.id}\t${r.user?.username ?? 'unknown'}\t${r.comment_text?.slice(0, 60) ?? ''}`);
+          }
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  cmd
+    .command('reply')
+    .description('Post a threaded reply to a comment')
+    .requiredOption('--comment-id <id>', 'Comment ID')
+    .requiredOption('--body <text>', 'Reply text')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await createThreadedComment(Number(opts.commentId), { comment_text: opts.body } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Reply posted.`);
         }
       } catch (e) { handleError(e); }
     });

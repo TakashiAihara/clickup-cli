@@ -7,6 +7,24 @@ import {
   createTask,
   updateTask,
   deleteTask,
+  addDependency,
+  deleteDependency,
+  addTaskLink,
+  deleteTaskLink,
+  gettrackedtime,
+  tracktime,
+  edittimetracked,
+  deletetimetracked,
+  createChecklist,
+  getTaskMembers,
+  addGuestToTask,
+  removeGuestFromTask,
+  addTagToTask,
+  removeTagFromTask,
+  createTaskAttachment,
+  mergeTasks,
+  getTaskSTimeinStatus,
+  getBulkTasksTimeinStatus,
 } from '@clickup/api';
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
@@ -191,6 +209,359 @@ export function createTasksCommand(): Command {
       } catch (error) {
         handleError(error);
       }
+    });
+
+  // --- US1: Dependencies & Links ---
+
+  tasks
+    .command('add-dependency')
+    .description('Add a dependency to a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--depends-on <id>', 'Task ID this task depends on')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await addDependency(opts.taskId, { depends_on: opts.dependsOn } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Dependency added: ${opts.taskId} depends on ${opts.dependsOn}`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('remove-dependency')
+    .description('Remove a dependency from a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--depends-on <id>', 'Dependent task ID to remove')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await deleteDependency(opts.taskId, { depends_on: opts.dependsOn } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Dependency removed.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('add-link')
+    .description('Link two tasks together')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--links-to <id>', 'Task ID to link to')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await addTaskLink(opts.taskId, opts.linksTo);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Task linked: ${opts.taskId} ↔ ${opts.linksTo}`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('remove-link')
+    .description('Remove a link between two tasks')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--links-to <id>', 'Linked task ID to remove')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await deleteTaskLink(opts.taskId, opts.linksTo);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Link removed.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  // --- US2: Time tracking per task ---
+
+  tasks
+    .command('time')
+    .description('List tracked time for a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await gettrackedtime(opts.taskId);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          const data = (result as any).data ?? result;
+          const entries = Array.isArray(data) ? data : [];
+          for (const e of entries) {
+            const dur = e.duration ? `${Math.round(Number(e.duration) / 60000)}m` : '-';
+            console.log(`${e.id}\t${dur}\t${e.user?.username ?? '-'}`);
+          }
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('track-time')
+    .description('Add a time entry to a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--duration <ms>', 'Duration in milliseconds')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await tracktime(opts.taskId, { duration: Number(opts.duration) } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Time tracked: ${Math.round(Number(opts.duration) / 60000)} minutes`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('edit-time')
+    .description('Edit a time entry on a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--interval-id <id>', 'Time interval ID')
+    .requiredOption('--duration <ms>', 'New duration in milliseconds')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await edittimetracked(opts.taskId, opts.intervalId, { duration: Number(opts.duration) } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Time entry updated.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('delete-time')
+    .description('Delete a time entry from a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--interval-id <id>', 'Time interval ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        await deletetimetracked(opts.taskId, opts.intervalId);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify({ deleted: true, intervalId: opts.intervalId }));
+        } else {
+          console.log(`Time entry deleted.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  // --- US3: Checklist ---
+
+  tasks
+    .command('create-checklist')
+    .description('Create a checklist on a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--name <name>', 'Checklist name')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await createChecklist(opts.taskId, { name: opts.name });
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Checklist "${opts.name}" created.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  // --- US5: Members & Guests ---
+
+  tasks
+    .command('members')
+    .description('List members of a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await getTaskMembers(opts.taskId);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          const members = (result as any).members ?? [];
+          for (const m of members) {
+            console.log(`${m.id}\t${m.username ?? m.email ?? '-'}`);
+          }
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('add-guest')
+    .description('Add a guest to a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--guest-id <id>', 'Guest ID')
+    .option('--permission-level <level>', 'Permission level (read, comment, edit, create)', 'read')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await addGuestToTask(opts.taskId, Number(opts.guestId), { permission_level: opts.permissionLevel } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Guest ${opts.guestId} added to task.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('remove-guest')
+    .description('Remove a guest from a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--guest-id <id>', 'Guest ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        await removeGuestFromTask(opts.taskId, Number(opts.guestId));
+        if (opts.output === 'json') {
+          console.log(JSON.stringify({ removed: true, guestId: opts.guestId }));
+        } else {
+          console.log(`Guest ${opts.guestId} removed from task.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  // --- US6: Tags ---
+
+  tasks
+    .command('add-tag')
+    .description('Add a tag to a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--tag-name <name>', 'Tag name')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await addTagToTask(opts.taskId, opts.tagName);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`Tag "${opts.tagName}" added to task.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('remove-tag')
+    .description('Remove a tag from a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--tag-name <name>', 'Tag name')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        await removeTagFromTask(opts.taskId, opts.tagName);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify({ removed: true, tag: opts.tagName }));
+        } else {
+          console.log(`Tag "${opts.tagName}" removed from task.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  // --- US7: Attach, Merge, Time in Status ---
+
+  tasks
+    .command('attach')
+    .description('Attach a file to a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .requiredOption('--file <path>', 'File path to attach')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const fs = await import('fs');
+        if (!fs.existsSync(opts.file)) {
+          throw new CliError(`File not found: ${opts.file}`, 'VALIDATION_ERROR', ExitCodes.VALIDATION_ERROR);
+        }
+        const fileData = fs.readFileSync(opts.file);
+        const blob = new Blob([fileData]);
+        const result = await createTaskAttachment(opts.taskId, blob as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(`File attached to task.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('merge')
+    .description('Merge a task into another task')
+    .requiredOption('--task-id <id>', 'Task ID (merge target)')
+    .requiredOption('--merge-with <id>', 'Task ID to merge into target')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await mergeTasks(opts.taskId, { task_ids: [opts.mergeWith] } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result ?? { merged: true }, null, 2));
+        } else {
+          console.log(`Task ${opts.mergeWith} merged into ${opts.taskId}.`);
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('time-in-status')
+    .description('Show time spent in each status for a task')
+    .requiredOption('--task-id <id>', 'Task ID')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const result = await getTaskSTimeinStatus(opts.taskId);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          const statuses = (result as any).current_status ? [result] : ((result as any).data ?? []);
+          for (const s of (Array.isArray(statuses) ? statuses : [])) {
+            const total = s.total_time ? `${Math.round(Number(s.total_time.by_minute) / 60)}h` : '-';
+            console.log(`${s.status ?? '-'}\t${total}`);
+          }
+        }
+      } catch (e) { handleError(e); }
+    });
+
+  tasks
+    .command('bulk-time-in-status')
+    .description('Show time in status for multiple tasks')
+    .requiredOption('--task-ids <ids>', 'Comma-separated task IDs')
+    .option('--output <format>', 'Output format (table|json)', 'table')
+    .action(async (opts) => {
+      try {
+        ensureAuth();
+        const taskIds = opts.taskIds.split(',').map((id: string) => id.trim());
+        const result = await getBulkTasksTimeinStatus({ task_ids: taskIds } as any);
+        if (opts.output === 'json') {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(JSON.stringify(result, null, 2));
+        }
+      } catch (e) { handleError(e); }
     });
 
   return tasks;
