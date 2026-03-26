@@ -1,6 +1,4 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, unlinkSync, rmSync, statSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { join } from 'node:path';
 
 import { describe, it, expect, afterEach } from 'vitest';
 
@@ -10,7 +8,6 @@ import {
   removeToken,
   saveConfig,
   loadConfig,
-  removeConfig,
   getToken,
   maskToken,
   migrateFromLegacy,

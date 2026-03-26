@@ -29,7 +29,6 @@ import { Command } from 'commander';
 
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
-import type { OutputFormat } from '../utils/format.js';
 
 function ensureAuth(): void {
   const token = getToken();

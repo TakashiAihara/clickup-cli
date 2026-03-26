@@ -20,11 +20,7 @@ import type {
   GetFolderViews200,
   GetListViews200,
   GetTeamViews200,
-  GetView200,
   CreateSpaceViewBody,
-  CreateFolderViewBody,
-  CreateListViewBody,
-  CreateTeamViewBody,
   CreateSpaceView200,
   CreateFolderView200,
   CreateListView200,
@@ -92,7 +88,7 @@ export function createViewsCommand(): Command {
     .command('show <viewId>')
     .description('Show view details')
     .option('--output <format>', 'Output format (table|json)', 'table')
-    .action(async (viewId, opts) => {
+    .action(async (viewId, _opts) => {
       try {
         ensureAuth();
         const result = await getView(viewId);
