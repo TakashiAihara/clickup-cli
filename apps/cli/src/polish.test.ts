@@ -1,11 +1,9 @@
 import { existsSync, statSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { join } from 'node:path';
 
 import { setAccessToken, getTasks, getTask, createTask, deleteTask } from '@clickup/api';
 import { describe, it, expect, afterAll } from 'vitest';
 
-import { saveToken, removeToken, removeConfig, getToken, maskToken, paths } from './config.js';
+import { saveToken, removeToken, getToken, maskToken, paths } from './config.js';
 
 const token = process.env.CLICKUP_API_TOKEN;
 const listId = process.env.TEST_LIST_ID;

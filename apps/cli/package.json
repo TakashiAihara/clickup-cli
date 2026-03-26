@@ -9,7 +9,7 @@
     "build": "bun build src/index.ts --compile --outfile dist/clickup",
     "dev": "bun run src/index.ts",
     "start": "node dist/index.js",
-    "lint": "eslint src --ext .ts",
+    "lint": "oxlint src",
     "typecheck": "tsc --noEmit",
     "test": "echo 'No tests yet'",
     "clean": "rm -rf dist"
