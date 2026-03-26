@@ -6,6 +6,16 @@
     "packages/*",
     "apps/*"
   ],
+  "catalog": {
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1",
+    "oxlint": "^1.57.0",
+    "oxfmt": "^0.42.0",
+    "axios": "^1.13.6",
+    "zod": "^4.3.6",
+    "orval": "^8.6.2",
+    "@types/inquirer": "^9.0.9"
+  },
   "scripts": {
     "build": "bun run --filter '*' build",
     "dev": "bun run --filter '*' dev",
@@ -18,9 +28,9 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "oxfmt": "^0.42.0",
-    "oxlint": "^1.57.0",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.1"
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
