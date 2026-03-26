@@ -1,6 +1,7 @@
-import { Command } from 'commander';
-import { input, password, confirm } from '@inquirer/prompts';
 import { setAccessToken, getAuthorizedUser, type GetAuthorizedUser200 } from '@clickup/api';
+import { input, password, confirm } from '@inquirer/prompts';
+import { Command } from 'commander';
+
 import { saveToken, removeConfig, getToken, maskToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 

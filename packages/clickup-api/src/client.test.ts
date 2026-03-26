@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { ClickUpClient } from './client.js';
 import type { ClickUpConfig } from './types.js';
 
@@ -31,7 +32,7 @@ describe('ClickUpClient', () => {
       expect(mockedAxios.create).toHaveBeenCalledWith({
         baseURL: 'https://api.clickup.com/api/v2',
         headers: {
-          'Authorization': 'test-token',
+          Authorization: 'test-token',
           'Content-Type': 'application/json',
         },
       });
@@ -40,11 +41,11 @@ describe('ClickUpClient', () => {
     it('should use default baseURL if not provided', () => {
       const config: ClickUpConfig = { accessToken: 'test-token' };
       new ClickUpClient(config);
-      
+
       expect(mockedAxios.create).toHaveBeenCalledWith({
         baseURL: 'https://api.clickup.com/api/v2',
         headers: {
-          'Authorization': 'test-token',
+          Authorization: 'test-token',
           'Content-Type': 'application/json',
         },
       });
@@ -171,7 +172,7 @@ describe('ClickUpClient', () => {
       const result = await client.searchTasks('test query', options);
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith(
-        '/search/tasks?query=test+query&space_ids%5B%5D=space1&space_ids%5B%5D=space2&statuses%5B%5D=open&statuses%5B%5D=in+progress&assignees%5B%5D=123&assignees%5B%5D=456'
+        '/search/tasks?query=test+query&space_ids%5B%5D=space1&space_ids%5B%5D=space2&statuses%5B%5D=open&statuses%5B%5D=in+progress&assignees%5B%5D=123&assignees%5B%5D=456',
       );
       expect(result).toEqual(mockTasks);
     });

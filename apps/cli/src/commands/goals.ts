@@ -1,12 +1,14 @@
-import { Command } from 'commander';
 import { setAccessToken, getGoals, getGoal, createGoal, updateGoal, deleteGoal } from '@clickup/api';
 import type { GetGoals200, GetGoal200, CreateGoalBody, CreateGoal200, UpdateGoalBody } from '@clickup/api';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -30,7 +32,9 @@ export function createGoalsCommand(): Command {
             console.log(`${g.id}\t${g.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -48,7 +52,9 @@ export function createGoalsCommand(): Command {
           console.log(`ID:   ${g.id}`);
           console.log(`Name: ${g.name}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -69,7 +75,9 @@ export function createGoalsCommand(): Command {
         } else {
           console.log(`Goal created: ${(result as CreateGoal200).goal?.name ?? (result as CreateGoal200).goal?.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -90,7 +98,9 @@ export function createGoalsCommand(): Command {
         } else {
           console.log('Goal updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -106,7 +116,9 @@ export function createGoalsCommand(): Command {
         } else {
           console.log(`Goal ${goalId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

@@ -1,12 +1,14 @@
-import { Command } from 'commander';
 import { setAccessToken, getWebhooks, createWebhook, updateWebhook, deleteWebhook } from '@clickup/api';
 import type { GetWebhooks200, CreateWebhookBody, CreateWebhook200, UpdateWebhookBody } from '@clickup/api';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -30,7 +32,9 @@ export function createWebhooksCommand(): Command {
             console.log(`${h.id}\t${h.endpoint}\t${h.status ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -53,7 +57,9 @@ export function createWebhooksCommand(): Command {
         } else {
           console.log(`Webhook created: ${(result as CreateWebhook200).id ?? 'ok'}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -68,7 +74,11 @@ export function createWebhooksCommand(): Command {
         ensureAuth();
         const body: Partial<UpdateWebhookBody> = {};
         if (opts.endpoint) body.endpoint = opts.endpoint;
-        if (opts.events) body.events = opts.events.split(',').map((e: string) => e.trim()).join(',');
+        if (opts.events)
+          body.events = opts.events
+            .split(',')
+            .map((e: string) => e.trim())
+            .join(',');
         if (opts.status) body.status = opts.status;
         const result = await updateWebhook(webhookId, body as UpdateWebhookBody);
         if (opts.output === 'json') {
@@ -76,7 +86,9 @@ export function createWebhooksCommand(): Command {
         } else {
           console.log('Webhook updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -92,7 +104,9 @@ export function createWebhooksCommand(): Command {
         } else {
           console.log(`Webhook ${webhookId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

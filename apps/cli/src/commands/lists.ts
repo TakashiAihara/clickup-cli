@@ -1,12 +1,39 @@
+import {
+  setAccessToken,
+  getLists,
+  getFolderlessLists,
+  createList,
+  createFolderlessList,
+  updateList,
+  deleteList,
+  getAccessibleCustomFields,
+  getListMembers,
+  addGuestToList,
+  removeGuestFromList,
+  addTaskToList,
+  removeTaskFromList,
+  createTaskFromTemplate,
+} from '@clickup/api';
+import type {
+  GetLists200,
+  GetFolderlessLists200,
+  CreateList200,
+  CreateFolderlessList200,
+  UpdateListBody,
+  GetAccessibleCustomFields200,
+  GetListMembers200,
+  AddGuestToListBody,
+  CreateTaskFromTemplateBody,
+} from '@clickup/api';
 import { Command } from 'commander';
-import { setAccessToken, getLists, getFolderlessLists, createList, createFolderlessList, updateList, deleteList, getAccessibleCustomFields, getListMembers, addGuestToList, removeGuestFromList, addTaskToList, removeTaskFromList, createTaskFromTemplate } from '@clickup/api';
-import type { GetLists200, GetFolderlessLists200, CreateList200, CreateFolderlessList200, UpdateListBody, GetAccessibleCustomFields200, GetListMembers200, AddGuestToListBody, CreateTaskFromTemplateBody } from '@clickup/api';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -30,7 +57,9 @@ export function createListsCommand(): Command {
             console.log(`${l.id}\t${l.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -50,7 +79,9 @@ export function createListsCommand(): Command {
             console.log(`${l.id}\t${l.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -69,7 +100,9 @@ export function createListsCommand(): Command {
           const created = result as CreateList200;
           console.log(`List created: ${created.name ?? created.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -88,7 +121,9 @@ export function createListsCommand(): Command {
           const created = result as CreateFolderlessList200;
           console.log(`List created: ${created.name ?? created.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -107,7 +142,9 @@ export function createListsCommand(): Command {
         } else {
           console.log('List updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -123,7 +160,9 @@ export function createListsCommand(): Command {
         } else {
           console.log(`List ${listId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -143,7 +182,9 @@ export function createListsCommand(): Command {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -163,7 +204,9 @@ export function createListsCommand(): Command {
             console.log(`${m.id}\t${m.username ?? m.email ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -176,13 +219,17 @@ export function createListsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToList(Number(opts.listId), Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToListBody);
+        const result = await addGuestToList(Number(opts.listId), Number(opts.guestId), {
+          permission_level: opts.permissionLevel,
+        } as AddGuestToListBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Guest ${opts.guestId} added to list.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -200,7 +247,9 @@ export function createListsCommand(): Command {
         } else {
           console.log(`Guest ${opts.guestId} removed from list.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -218,7 +267,9 @@ export function createListsCommand(): Command {
         } else {
           console.log(`Task ${opts.taskId} added to list.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -236,7 +287,9 @@ export function createListsCommand(): Command {
         } else {
           console.log(`Task ${opts.taskId} removed from list.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -249,13 +302,17 @@ export function createListsCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createTaskFromTemplate(Number(opts.listId), opts.templateId, { name: opts.name } as CreateTaskFromTemplateBody);
+        const result = await createTaskFromTemplate(Number(opts.listId), opts.templateId, {
+          name: opts.name,
+        } as CreateTaskFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Task created from template.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

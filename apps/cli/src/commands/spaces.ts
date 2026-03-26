@@ -1,13 +1,40 @@
+import {
+  setAccessToken,
+  getSpaces,
+  createSpace,
+  updateSpace,
+  deleteSpace,
+  getSpaceAvailableFields,
+  getSpaceTags,
+  createSpaceTag,
+  editSpaceTag,
+  deleteSpaceTag,
+  createFolderFromTemplate,
+  createSpaceListFromTemplate,
+} from '@clickup/api';
+import type {
+  GetSpaces200,
+  CreateSpaceBody,
+  CreateSpace200,
+  UpdateSpaceBody,
+  GetSpaceAvailableFields200,
+  GetSpaceTags200,
+  CreateSpaceTagBody,
+  EditSpaceTagBody,
+  DeleteSpaceTagBody,
+  CreateFolderFromTemplateBody,
+  CreateSpaceListFromTemplateBody,
+} from '@clickup/api';
 import { Command } from 'commander';
-import { setAccessToken, getSpaces, createSpace, updateSpace, deleteSpace, getSpaceAvailableFields, getSpaceTags, createSpaceTag, editSpaceTag, deleteSpaceTag, createFolderFromTemplate, createSpaceListFromTemplate } from '@clickup/api';
-import type { GetSpaces200, CreateSpaceBody, CreateSpace200, UpdateSpaceBody, GetSpaceAvailableFields200, GetSpaceTags200, CreateSpaceTagBody, EditSpaceTagBody, DeleteSpaceTagBody, CreateFolderFromTemplateBody, CreateSpaceListFromTemplateBody } from '@clickup/api';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 import type { OutputFormat } from '../utils/format.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -31,7 +58,9 @@ export function createSpacesCommand(): Command {
             console.log(`${s.id}\t${s.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -43,14 +72,18 @@ export function createSpacesCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createSpace(Number(opts.teamId), { name: opts.name } as CreateSpaceBody);
+        const result = await createSpace(Number(opts.teamId), {
+          name: opts.name,
+        } as CreateSpaceBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           const created = result as CreateSpace200;
           console.log(`Space created: ${created.name ?? created.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -69,7 +102,9 @@ export function createSpacesCommand(): Command {
         } else {
           console.log('Space updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -85,7 +120,9 @@ export function createSpacesCommand(): Command {
         } else {
           console.log(`Space ${spaceId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -105,7 +142,9 @@ export function createSpacesCommand(): Command {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -125,7 +164,9 @@ export function createSpacesCommand(): Command {
             console.log(`${t.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -137,13 +178,17 @@ export function createSpacesCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createSpaceTag(Number(opts.spaceId), { tag: { name: opts.name } } as CreateSpaceTagBody);
+        const result = await createSpaceTag(Number(opts.spaceId), {
+          tag: { name: opts.name },
+        } as CreateSpaceTagBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Tag created: ${opts.name}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -156,13 +201,17 @@ export function createSpacesCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await editSpaceTag(Number(opts.spaceId), opts.name, { tag: { name: opts.newName } } as EditSpaceTagBody);
+        const result = await editSpaceTag(Number(opts.spaceId), opts.name, {
+          tag: { name: opts.newName },
+        } as EditSpaceTagBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Tag renamed: ${opts.name} → ${opts.newName}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -180,7 +229,9 @@ export function createSpacesCommand(): Command {
         } else {
           console.log(`Tag "${opts.name}" deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -193,13 +244,17 @@ export function createSpacesCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createFolderFromTemplate(opts.spaceId, opts.templateId, { name: opts.name } as CreateFolderFromTemplateBody);
+        const result = await createFolderFromTemplate(opts.spaceId, opts.templateId, {
+          name: opts.name,
+        } as CreateFolderFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Folder created from template.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -212,13 +267,17 @@ export function createSpacesCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createSpaceListFromTemplate(opts.spaceId, opts.templateId, { name: opts.name } as CreateSpaceListFromTemplateBody);
+        const result = await createSpaceListFromTemplate(opts.spaceId, opts.templateId, {
+          name: opts.name,
+        } as CreateSpaceListFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`List created from template.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

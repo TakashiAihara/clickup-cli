@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "tabWidth": 2,
+  "bracketSpacing": true,
+  "printWidth": 120,
+  "sortImports": {},
+  "sortPackageJson": true,
+  "ignorePatterns": [
+    "*.md",
+    "bun.lock",
+    "**/dist/",
+    ".claude/",
+    ".specify/",
+    "specs/",
+    "packages/clickup-api/src/generated/",
+    "packages/clickup-api/openapi/"
+  ]
+}

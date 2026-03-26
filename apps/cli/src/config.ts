@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { join } from 'node:path';
+
 import { encrypt, decrypt, type EncryptedData } from './crypto.js';
 
 // XDG-compliant config directory
@@ -143,4 +144,10 @@ export function maskToken(token: string): string {
 }
 
 // Re-export paths for testing
-export const paths = { CONFIG_DIR, CREDENTIALS_FILE, CONFIG_FILE, LEGACY_CONFIG_DIR, LEGACY_CONFIG_FILE } as const;
+export const paths = {
+  CONFIG_DIR,
+  CREDENTIALS_FILE,
+  CONFIG_FILE,
+  LEGACY_CONFIG_DIR,
+  LEGACY_CONFIG_FILE,
+} as const;

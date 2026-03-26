@@ -25,9 +25,7 @@ export function printTaskTable(tasks: any[]): void {
     const name = (task.name ?? '').toString().slice(0, 28).padEnd(30);
     const status = (task.status?.status ?? '-').toString().padEnd(15);
     const assignee = (task.assignees?.[0]?.username ?? '-').toString().padEnd(15);
-    const dueDate = task.due_date
-      ? new Date(Number(task.due_date)).toISOString().slice(0, 10)
-      : '-';
+    const dueDate = task.due_date ? new Date(Number(task.due_date)).toISOString().slice(0, 10) : '-';
     console.log(`${id} ${name} ${status} ${assignee} ${dueDate.padEnd(12)}`);
   }
 }

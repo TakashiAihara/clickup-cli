@@ -1,12 +1,33 @@
+import {
+  setAccessToken,
+  getFolders,
+  getFolder,
+  createFolder,
+  updateFolder,
+  deleteFolder,
+  getFolderAvailableFields,
+  addGuestToFolder,
+  removeGuestFromFolder,
+  createFolderListFromTemplate,
+} from '@clickup/api';
+import type {
+  GetFolders200Folders,
+  GetFolder200,
+  CreateFolder200,
+  UpdateFolderBody,
+  GetFolderAvailableFields200,
+  AddGuestToFolderBody,
+  CreateFolderListFromTemplateBody,
+} from '@clickup/api';
 import { Command } from 'commander';
-import { setAccessToken, getFolders, getFolder, createFolder, updateFolder, deleteFolder, getFolderAvailableFields, addGuestToFolder, removeGuestFromFolder, createFolderListFromTemplate } from '@clickup/api';
-import type { GetFolders200Folders, GetFolder200, CreateFolder200, UpdateFolderBody, GetFolderAvailableFields200, AddGuestToFolderBody, CreateFolderListFromTemplateBody } from '@clickup/api';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -30,7 +51,9 @@ export function createFoldersCommand(): Command {
             console.log(`${f.id}\t${f.name}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -48,7 +71,9 @@ export function createFoldersCommand(): Command {
           console.log(`ID:   ${f.id}`);
           console.log(`Name: ${f.name}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -67,7 +92,9 @@ export function createFoldersCommand(): Command {
           const created = result as CreateFolder200;
           console.log(`Folder created: ${created.name ?? created.id}`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -86,7 +113,9 @@ export function createFoldersCommand(): Command {
         } else {
           console.log('Folder updated.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -102,7 +131,9 @@ export function createFoldersCommand(): Command {
         } else {
           console.log(`Folder ${folderId} deleted.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -122,7 +153,9 @@ export function createFoldersCommand(): Command {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -135,13 +168,17 @@ export function createFoldersCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await addGuestToFolder(Number(opts.folderId), Number(opts.guestId), { permission_level: opts.permissionLevel } as AddGuestToFolderBody);
+        const result = await addGuestToFolder(Number(opts.folderId), Number(opts.guestId), {
+          permission_level: opts.permissionLevel,
+        } as AddGuestToFolderBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`Guest ${opts.guestId} added to folder.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -159,7 +196,9 @@ export function createFoldersCommand(): Command {
         } else {
           console.log(`Guest ${opts.guestId} removed from folder.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -172,13 +211,17 @@ export function createFoldersCommand(): Command {
     .action(async (opts) => {
       try {
         ensureAuth();
-        const result = await createFolderListFromTemplate(opts.folderId, opts.templateId, { name: opts.name } as CreateFolderListFromTemplateBody);
+        const result = await createFolderListFromTemplate(opts.folderId, opts.templateId, {
+          name: opts.name,
+        } as CreateFolderListFromTemplateBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(`List created from template.`);
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

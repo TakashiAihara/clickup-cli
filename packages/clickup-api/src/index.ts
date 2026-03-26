@@ -8,7 +8,7 @@ export type {
   Space as ClickUpSpace,
   List as ClickUpList,
   CreateTaskPayload,
-  UpdateTaskPayload
+  UpdateTaskPayload,
 } from './types.js';
 
 // Generated API functions (getAccessToken excluded to avoid collision with client.ts)

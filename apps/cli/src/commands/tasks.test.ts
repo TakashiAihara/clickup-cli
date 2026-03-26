@@ -1,12 +1,5 @@
+import { setAccessToken, getTasks, getTask, createTask, updateTask, deleteTask } from '@clickup/api';
 import { describe, it, expect, afterAll } from 'vitest';
-import {
-  setAccessToken,
-  getTasks,
-  getTask,
-  createTask,
-  updateTask,
-  deleteTask,
-} from '@clickup/api';
 
 /**
  * Integration tests for Task CRUD using the real ClickUp API.
@@ -88,9 +81,13 @@ describe('Task CRUD Integration', () => {
     if (skipIfNoCredentials() || createdTaskIds.length === 0) return;
     setAccessToken(token!);
 
-    const result = await updateTask(createdTaskIds[0]!, {
-      name: `${TEST_PREFIX} Updated Test`,
-    }, {});
+    const result = await updateTask(
+      createdTaskIds[0]!,
+      {
+        name: `${TEST_PREFIX} Updated Test`,
+      },
+      {},
+    );
     const task = result as any;
 
     expect(task.name).toBe(`${TEST_PREFIX} Updated Test`);

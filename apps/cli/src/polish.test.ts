@@ -1,14 +1,10 @@
-import { describe, it, expect, afterAll } from 'vitest';
 import { existsSync, statSync } from 'node:fs';
-import { join } from 'node:path';
 import { homedir } from 'node:os';
-import {
-  setAccessToken,
-  getTasks,
-  getTask,
-  createTask,
-  deleteTask,
-} from '@clickup/api';
+import { join } from 'node:path';
+
+import { setAccessToken, getTasks, getTask, createTask, deleteTask } from '@clickup/api';
+import { describe, it, expect, afterAll } from 'vitest';
+
 import { saveToken, removeToken, removeConfig, getToken, maskToken, paths } from './config.js';
 
 const token = process.env.CLICKUP_API_TOKEN;

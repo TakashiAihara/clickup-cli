@@ -1,12 +1,14 @@
-import { Command } from 'commander';
 import { setAccessToken, getAccessibleCustomFields, setCustomFieldValue, removeCustomFieldValue } from '@clickup/api';
 import type { GetAccessibleCustomFields200, SetCustomFieldValueBody } from '@clickup/api';
+import { Command } from 'commander';
+
 import { getToken } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
   const token = getToken();
-  if (!token) throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
+  if (!token)
+    throw new CliError('Authentication required. Run: clickup auth login', 'AUTH_REQUIRED', ExitCodes.AUTH_REQUIRED);
   setAccessToken(token);
 }
 
@@ -30,7 +32,9 @@ export function createCustomFieldsCommand(): Command {
             console.log(`${f.id}\t${f.name}\t${f.type ?? '-'}`);
           }
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -44,14 +48,20 @@ export function createCustomFieldsCommand(): Command {
       try {
         ensureAuth();
         let value: unknown = opts.value;
-        try { value = JSON.parse(opts.value); } catch {}
-        const result = await setCustomFieldValue(opts.taskId, opts.fieldId, { value } as SetCustomFieldValueBody);
+        try {
+          value = JSON.parse(opts.value);
+        } catch {}
+        const result = await setCustomFieldValue(opts.taskId, opts.fieldId, {
+          value,
+        } as SetCustomFieldValueBody);
         if (opts.output === 'json') {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log('Custom field value set.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   cmd
@@ -69,7 +79,9 @@ export function createCustomFieldsCommand(): Command {
         } else {
           console.log('Custom field value removed.');
         }
-      } catch (e) { handleError(e); }
+      } catch (e) {
+        handleError(e);
+      }
     });
 
   return cmd;

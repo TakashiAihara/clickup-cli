@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2026-03-24
 
 ## Active Technologies
+
 - TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun) (003-single-binary-release)
 - TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント (004-hierarchy-commands)
 
@@ -37,11 +38,13 @@ apps/
 ## Commands
 
 ### Authentication
+
 - `auth login` - Store API token (interactive)
 - `auth status` - Check auth status
 - `auth logout` - Remove token
 
 ### Tasks
+
 - `tasks list --list-id <id>` - List tasks (supports `--output json|table`)
 - `tasks create` - Create new task (CLI args or `--interactive`)
 - `tasks show <id>` - Show task details
@@ -49,6 +52,7 @@ apps/
 - `tasks delete <id> --confirm` - Delete task
 
 Global options:
+
 - `--output <json|table>` - Output format (default table)
 - `--config <path>` - Override config file
 - `--verbose` - Debug logging
@@ -56,6 +60,7 @@ Global options:
 ## Code Style
 
 **TypeScript**:
+
 - Strict mode enabled
 - No `any` types (except test fixtures)
 - Functions ≤ 50 lines; prefer pure functions over classes
@@ -67,12 +72,14 @@ Global options:
 **Error Handling**: Throw typed errors; catch at command boundary; set proper exit codes.
 
 **Constitution Compliance**:
+
 - Schema-Driven: Use generated API types + Zod validation
 - CLI-First: Dual output (JSON deterministic, no ANSI)
 - Configuration: 0600, token masking
 - Test Discipline: Target ≥80% coverage
 
 ## Recent Changes
+
 - 005-task-advanced: Added TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント
 - 004-hierarchy-commands: Added TypeScript 5.3+ / Bun 1.x + Commander (CLI), Orval 生成 API クライアント
 - 003-single-binary-release: Added TypeScript 5.3+ / Bun 1.x + Bun (build --compile), GitHub Actions (oven-sh/setup-bun)
