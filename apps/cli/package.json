@@ -9,6 +9,8 @@
     "build": "bun build src/index.ts --compile --outfile dist/clickup",
     "dev": "bun run src/index.ts",
     "start": "node dist/index.js",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "lint": "oxlint src",
     "typecheck": "tsc --noEmit",
     "test": "echo 'No tests yet'",
