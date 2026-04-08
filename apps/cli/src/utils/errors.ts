@@ -19,6 +19,7 @@ export const ExitCodes = {
   API_ERROR: 6,
   RATE_LIMITED: 7,
   NETWORK_ERROR: 8,
+  ACCESS_RESTRICTED: 9,
 } as const;
 
 export function handleError(error: unknown): never {

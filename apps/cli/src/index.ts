@@ -12,10 +12,23 @@ import { createTasksCommand } from './commands/tasks.js';
 import { createTimeTrackingCommand } from './commands/time-tracking.js';
 import { createViewsCommand } from './commands/views.js';
 import { createWebhooksCommand } from './commands/webhooks.js';
+import { checkTeamAccess, checkSpaceAccess } from './config.js';
+import { handleError } from './utils/errors.js';
 
 const program = new Command();
 
 program.name('clickup').description('ClickUp CLI - Manage ClickUp resources from the command line').version('0.1.0');
+
+// Access restriction: check --team-id and --space-id against allowlist before any command runs
+program.hook('preAction', (_thisCommand, actionCommand) => {
+  const opts = actionCommand.opts();
+  if (opts.teamId) {
+    checkTeamAccess(String(opts.teamId));
+  }
+  if (opts.spaceId) {
+    checkSpaceAccess(String(opts.spaceId));
+  }
+});
 
 program.addCommand(createAuthCommand());
 program.addCommand(createTasksCommand());
@@ -30,4 +43,8 @@ program.addCommand(createWebhooksCommand());
 program.addCommand(createTagsCommand());
 program.addCommand(createCustomFieldsCommand());
 
-program.parse();
+try {
+  program.parse();
+} catch (e) {
+  handleError(e);
+}
