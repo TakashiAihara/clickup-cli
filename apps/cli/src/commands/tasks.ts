@@ -128,7 +128,7 @@ export function createTasksCommand(): Command {
         ensureAuth();
 
         const body: Record<string, unknown> = { name: opts.name };
-        if (opts.description) body.description = opts.description;
+        if (opts.description) body.markdown_content = opts.description;
         if (opts.status) body.status = opts.status;
         if (opts.priority) body.priority = parseInt(opts.priority, 10);
         if (opts.tags) body.tags = opts.tags.split(',').map((t: string) => t.trim());
@@ -168,7 +168,7 @@ export function createTasksCommand(): Command {
 
         const body: Record<string, unknown> = {};
         if (opts.name) body.name = opts.name;
-        if (opts.description) body.description = opts.description;
+        if (opts.description) body.markdown_content = opts.description;
         if (opts.status) body.status = opts.status;
         if (opts.priority) {
           body.priority = opts.priority === 'null' ? null : parseInt(opts.priority, 10);
