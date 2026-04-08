@@ -144,7 +144,7 @@ vite.config.ts.timestamp-*
 # Bun
 
 # Claude Code (keep only project skills)
-/.claude/*
+/.claude/
 !/.claude/skills/
 
 # Compiled binaries
