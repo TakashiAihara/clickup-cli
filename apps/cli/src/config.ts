@@ -3,6 +3,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 
 import { encrypt, decrypt, type EncryptedData } from './crypto.js';
+import { CliError, ExitCodes } from './utils/errors.js';
 
 // XDG-compliant config directory
 const CONFIG_DIR = process.env.XDG_CONFIG_HOME
@@ -19,6 +20,8 @@ const LEGACY_CONFIG_FILE = join(LEGACY_CONFIG_DIR, 'config.json');
 export interface AppConfig {
   default_list_id?: string;
   output_format?: 'table' | 'json';
+  allowedTeamIds?: string[];
+  allowedSpaceIds?: string[];
 }
 
 function ensureConfigDir(): void {
@@ -141,6 +144,34 @@ export function getToken(): string | undefined {
 export function maskToken(token: string): string {
   if (token.length <= 8) return '****';
   return token.slice(0, 4) + '****' + token.slice(-4);
+}
+
+// --- Access restriction ---
+
+export function checkTeamAccess(teamId: string): void {
+  const config = loadConfig();
+  if (config.allowedTeamIds && config.allowedTeamIds.length > 0) {
+    if (!config.allowedTeamIds.includes(teamId)) {
+      throw new CliError(
+        `Access restricted: team ${teamId} is not in allowedTeamIds. Allowed: ${config.allowedTeamIds.join(', ')}`,
+        'ACCESS_RESTRICTED',
+        ExitCodes.ACCESS_RESTRICTED,
+      );
+    }
+  }
+}
+
+export function checkSpaceAccess(spaceId: string): void {
+  const config = loadConfig();
+  if (config.allowedSpaceIds && config.allowedSpaceIds.length > 0) {
+    if (!config.allowedSpaceIds.includes(spaceId)) {
+      throw new CliError(
+        `Access restricted: space ${spaceId} is not in allowedSpaceIds. Allowed: ${config.allowedSpaceIds.join(', ')}`,
+        'ACCESS_RESTRICTED',
+        ExitCodes.ACCESS_RESTRICTED,
+      );
+    }
+  }
 }
 
 // Re-export paths for testing
