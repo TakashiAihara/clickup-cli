@@ -27,7 +27,7 @@ import type {
 } from '@clickup/api';
 import { Command } from 'commander';
 
-import { getToken } from '../config.js';
+import { getToken, getAllowedSpaceIds } from '../config.js';
 import { handleError, CliError, ExitCodes } from '../utils/errors.js';
 
 function ensureAuth(): void {
@@ -49,10 +49,14 @@ export function createSpacesCommand(): Command {
       try {
         ensureAuth();
         const result = await getSpaces(Number(opts.teamId));
+        const allowedIds = getAllowedSpaceIds();
+        let spaces = (result as GetSpaces200).spaces ?? [];
+        if (allowedIds) {
+          spaces = spaces.filter((s) => allowedIds.includes(String(s.id)));
+        }
         if (opts.output === 'json') {
-          console.log(JSON.stringify(result, null, 2));
+          console.log(JSON.stringify({ spaces }, null, 2));
         } else {
-          const spaces = (result as GetSpaces200).spaces ?? [];
           for (const s of spaces) {
             console.log(`${s.id}\t${s.name}`);
           }

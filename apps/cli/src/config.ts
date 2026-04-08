@@ -174,6 +174,14 @@ export function checkSpaceAccess(spaceId: string): void {
   }
 }
 
+export function getAllowedSpaceIds(): string[] | null {
+  const config = loadConfig();
+  if (config.allowedSpaceIds && config.allowedSpaceIds.length > 0) {
+    return config.allowedSpaceIds;
+  }
+  return null;
+}
+
 // Re-export paths for testing
 export const paths = {
   CONFIG_DIR,
