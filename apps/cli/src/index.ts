@@ -17,7 +17,7 @@ import { handleError } from './utils/errors.js';
 
 const program = new Command();
 
-program.name('clickup').description('ClickUp CLI - Manage ClickUp resources from the command line').version('0.1.0');
+program.name('clickup').description('ClickUp CLI - Manage ClickUp resources from the command line').version('0.3.0');
 
 // Access restriction: check --team-id and --space-id against allowlist before any command runs
 program.hook('preAction', (_thisCommand, actionCommand) => {

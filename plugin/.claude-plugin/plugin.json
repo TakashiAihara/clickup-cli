@@ -1,7 +1,7 @@
 {
   "name": "clickup-cli",
   "description": "Manage ClickUp workspaces, tasks, and projects from Claude Code using the clickup CLI",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": {
     "name": "Takashi Aihara",
     "url": "https://github.com/TakashiAihara"
